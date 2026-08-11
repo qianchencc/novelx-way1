@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f0e5d4" />
+    <meta
+      name="description"
+      content="诺文，一个把视频内容生长为世界观、角色、故事与图像的内容创作 Agent。"
+    />
+    <title>诺文 | 让一条好视频长成你的世界</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="./assets/novelx-favicon.png" />
+    <link rel="preload" href="./assets/hero-blank-studio.png" as="image" />
+    <link rel="preload" href="./assets/novelx-logo.jpg" as="image" />
+    <link rel="preload" href="./assets/novelx-wordmark.png" as="image" />
+    <link rel="preload" href="./assets/novelx-workbench-studio-v2.png" as="image" />
+    <link rel="preload" href="./assets/intro-ink-world.png" as="image" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-progress" aria-hidden="true"><span></span></div>
+
+    <main>
+      <section class="chapter opening" id="opening" aria-labelledby="opening-title">
+        <img
+          class="scene-image opening-image"
+          src="./assets/hero-blank-studio.png"
+          alt="阳光照进安静的纸面创作空间，木桌等待一个新世界开始"
+        />
+        <div class="opening-shade" aria-hidden="true"></div>
+        <svg
+          class="hero-orbit"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="xMidYMid slice"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="orbit-gradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#9b7e53" stop-opacity="0.18" />
+              <stop offset="0.44" stop-color="#c4a46f" stop-opacity="0.48" />
+              <stop offset="0.76" stop-color="#ab8c5c" stop-opacity="0.34" />
+              <stop offset="1" stop-color="#d8bd89" stop-opacity="0.14" />
+            </linearGradient>
+            <filter id="orbit-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="8" />
+            </filter>
+            <mask id="orbit-reveal-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="900">
+              <path
+                class="orbit-reveal"
+                d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536"
+              />
+            </mask>
+          </defs>
+
+          <g class="orbit-stroke-layers" mask="url(#orbit-reveal-mask)" transform="translate(42 0)">
+            <path
+              class="orbit-haze"
+              d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536"
+            />
+            <path
+              class="orbit-main"
+              d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536"
+            />
+            <path
+              class="orbit-brush orbit-brush-soft"
+              pathLength="100"
+              d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536"
+            />
+            <path
+              class="orbit-brush orbit-brush-core"
+              pathLength="100"
+              d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536"
+            />
+          </g>
+
+          <g class="orbit-decor" transform="translate(42 0)">
+            <g class="orbit-star orbit-star-large" transform="translate(855 174)">
+              <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z" />
+              <circle r="13" />
+            </g>
+            <g class="orbit-star orbit-star-small" transform="translate(948 185)">
+              <path d="M 0 -3.5 L 0.9 -0.9 L 3.5 0 L 0.9 0.9 L 0 3.5 L -0.9 0.9 L -3.5 0 L -0.9 -0.9 Z" />
+            </g>
+            <circle class="orbit-node" cx="880" cy="519" r="2.4" />
+            <circle class="orbit-node-small" cx="958" cy="463" r="1.5" />
+            <circle class="orbit-ring" cx="994" cy="404" r="3.2" />
+            <circle class="orbit-dust" cx="992" cy="330" r="1.25" />
+            <circle class="orbit-dust" cx="979" cy="242" r="0.9" />
+            <circle class="orbit-dust" cx="816" cy="549" r="1.05" />
+            <path class="orbit-diamond" d="M 767 542 L 770 546 L 767 550 L 764 546 Z" />
+          </g>
+        </svg>
+        <div class="opening-brand" aria-label="NovelX">
+          <span class="brand-emblem" aria-hidden="true">
+            <img src="./assets/novelx-logo.jpg" alt="" />
+          </span>
+          <span class="opening-wordmark" aria-hidden="true">
+            <img src="./assets/novelx-wordmark.png" alt="" />
+          </span>
+        </div>
+        <div class="opening-copy">
+          <h1 id="opening-title">
+            <span class="title-line">让一条好视频，</span>
+            <span class="title-line title-line-second">长成你的 <i class="hero-oc" tabindex="0" role="button" aria-label="OC，悬停探索原创角色与原创世界"><span class="oc-default">OC</span><span class="oc-expanded" aria-hidden="true"><span class="oc-prefix">原创</span><span class="oc-roll"><span class="oc-roll-track"><span>角色</span><span>世界</span></span></span></span><span class="oc-glitch oc-glitch-a" aria-hidden="true">OC</span><span class="oc-glitch oc-glitch-b" aria-hidden="true">OC</span></i><b>。</b></span>
+          </h1>
+          <p class="opening-note">从视频到世界观、角色、故事与图像</p>
+        </div>
+        <a class="journey-cue" href="#product-journey" aria-label="查看视频如何生长为一个世界">
+          <span class="journey-label">看它生长</span>
+          <span class="journey-rail" aria-hidden="true">
+            <span class="journey-line"></span>
+            <span class="journey-drop"></span>
+            <span class="journey-chevron"><span></span></span>
+          </span>
+          <span class="journey-ornament journey-spark journey-spark-one" aria-hidden="true"></span>
+          <span class="journey-ornament journey-spark journey-spark-two" aria-hidden="true"></span>
+          <span class="journey-ornament journey-accent" aria-hidden="true"></span>
+        </a>
+        <span class="opening-index" aria-hidden="true">NX · 001</span>
+      </section>
+
+      <section class="chapter product-journey" id="product-journey" aria-labelledby="product-journey-title">
+        <div class="product-journey-stage">
+          <header class="product-journey-heading">
+            <p>从内容到创作</p>
+            <h2 id="product-journey-title">一次心动，沿着同一条脉络生长。</h2>
+          </header>
+
+          <ol class="product-journey-nav" aria-label="诺文内容创作流程">
+            <li class="is-active" data-product-step="0"><span>视频来源</span><small>传承库</small></li>
+            <li data-product-step="1"><span>灵感凝结</span><small>灵感库</small></li>
+            <li data-product-step="2"><span>Agent 生长</span><small>Growth</small></li>
+            <li data-product-step="3"><span>作品归档</span><small>艺术库</small></li>
+          </ol>
+
+          <div class="product-scenes">
+            <article class="product-scene product-scene-source is-active" data-product-scene="0">
+              <div class="product-scene-copy">
+                <span>视频来源</span>
+                <h3>收藏，不再是终点。</h3>
+                <p>视频、作者与创作方法被整理成可调用的来源，让打动你的内容真正进入创作。</p>
+              </div>
+              <figure class="product-composition">
+                <div class="product-window">
+                  <img src="./assets/product-heritage-library.png" alt="诺文传承库，汇集视频、作者与创作方法" width="2560" height="1528" />
+                </div>
+                <div class="product-detail" aria-hidden="true">
+                  <img src="./assets/product-heritage-library.png" alt="" width="2560" height="1528" />
+                </div>
+                <figcaption>从一条内容开始，找到值得继续生长的主题。</figcaption>
+              </figure>
+            </article>
+
+            <article class="product-scene product-scene-seed" data-product-scene="1">
+              <div class="product-scene-copy">
+                <span>灵感凝结</span>
+                <h3>把心动，凝成一颗种子。</h3>
+                <p>主题、情绪与意象不再散落在信息流里，它们被整理成可以选择、组合和继续发展的灵感。</p>
+              </div>
+              <figure class="product-composition">
+                <div class="product-window">
+                  <img src="./assets/product-inspiration-library.png" alt="诺文灵感库，以卡片形式整理可继续创作的幻想种子" width="2560" height="1528" loading="lazy" decoding="async" />
+                </div>
+                <div class="product-detail" aria-hidden="true">
+                  <img src="./assets/product-inspiration-library.png" alt="" width="2560" height="1528" loading="lazy" decoding="async" />
+                </div>
+                <figcaption>每条灵感都能成为一个地点、人物或故事的起点。</figcaption>
+              </figure>
+            </article>
+
+            <article class="product-scene product-scene-growth" data-product-scene="2">
+              <div class="product-scene-copy">
+                <span>Agent 生长</span>
+                <h3>你决定方向，Agent 完成手艺。</h3>
+                <p>从世界结构到文章与配图，多步任务持续推进，所有结果进入同一个真实项目。</p>
+              </div>
+              <figure class="product-composition">
+                <div class="product-window">
+                  <img src="./assets/product-growth-workbench.png" alt="诺文 Growth 工作台，同时展示 Agent 报告、项目文件、文章与配图" width="2560" height="1528" loading="lazy" decoding="async" />
+                </div>
+                <div class="product-detail" aria-hidden="true">
+                  <img src="./assets/product-growth-workbench.png" alt="" width="2560" height="1528" loading="lazy" decoding="async" />
+                </div>
+                <figcaption>世界观、角色、故事与图像，在同一份上下文中彼此咬合。</figcaption>
+              </figure>
+            </article>
+
+            <article class="product-scene product-scene-archive" data-product-scene="3">
+              <div class="product-scene-copy">
+                <span>作品归档</span>
+                <h3>它会留下，也会继续生长。</h3>
+                <p>生成的作品成为可回看、可修改、可扩写的个人艺术档案，而不是一次性回答。</p>
+              </div>
+              <figure class="product-composition">
+                <div class="product-window">
+                  <img src="./assets/product-art-library.png" alt="诺文艺术库，以编辑式画布呈现同一世界中的系列作品" width="2560" height="1528" loading="lazy" decoding="async" />
+                </div>
+                <div class="product-detail" aria-hidden="true">
+                  <img src="./assets/product-art-library.png" alt="" width="2560" height="1528" loading="lazy" decoding="async" />
+                </div>
+                <figcaption>每一次选择，都沉淀为属于你的作品与审美。</figcaption>
+              </figure>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="chapter creation"
+        id="growth"
+        aria-label="从创作指令到 NovelX 世界工作台"
+      >
+        <div class="creation-stage">
+          <div class="growth-stage">
+            <div class="growth-aura" aria-hidden="true"></div>
+            <p class="growth-command">
+              <span class="growth-source">视频种子 · 科幻概念解说</span>
+              <span class="command-name">/growth</span>
+              <span
+                class="command-copy"
+                data-text="以这条视频为种子，创作一个硬科幻世界。"
+              >以这条视频为种子，创作一个硬科幻世界。</span>
+              <span class="command-caret" aria-hidden="true"></span>
+            </p>
+            <span class="growth-seed" aria-hidden="true"></span>
+          </div>
+
+          <div class="scan-stage" id="scan">
+          <img
+            class="scene-image intro-background"
+            src="./assets/intro-ink-world.png"
+            alt=""
+            aria-hidden="true"
+          />
+
+            <div class="story-invitation">
+              <span class="story-ghost" aria-hidden="true">STORY</span>
+              <h2 class="story-title" aria-label="体验这段故事">
+                <span class="story-kicker">
+                  <span class="story-title-char" aria-hidden="true">体</span>
+                  <span class="story-title-char" aria-hidden="true">验</span>
+                </span>
+                <span class="story-display">
+                  <span class="story-row">
+                    <span class="story-title-char" aria-hidden="true">这</span>
+                    <span class="story-title-char" aria-hidden="true">段</span>
+                  </span>
+                  <span class="story-row story-row-emphasis">
+                    <span class="story-title-char" aria-hidden="true">故</span>
+                    <span class="story-title-char" aria-hidden="true">事</span>
+                    <i class="story-gold-point" aria-hidden="true"></i>
+                  </span>
+                </span>
+              </h2>
+              <span class="story-bridge" aria-hidden="true">
+                <span></span>
+                <i></i>
+              </span>
+              <span class="story-scroll-cue" aria-hidden="true">
+                <span class="story-cue-line"></span>
+                <span class="story-cue-arrow"></span>
+              </span>
+            </div>
+
+            <div class="story-explainers" aria-live="polite">
+              <div class="story-explainer-stack">
+                <article class="story-explainer" data-explain-copy="0">
+                  <span class="story-explainer-ghost" aria-hidden="true">WORLD</span>
+                  <p class="story-explainer-kicker">构建世界</p>
+                  <h2>
+                    <span>世界</span>
+                    <span class="story-explainer-emphasis">从此构建<i aria-hidden="true"></i></span>
+                  </h2>
+                  <p class="story-explainer-description">地理、国家、组织与规则，在世界档案中彼此关联。</p>
+                </article>
+
+                <article class="story-explainer" data-explain-copy="1">
+                  <span class="story-explainer-ghost" aria-hidden="true">STORY</span>
+                  <p class="story-explainer-kicker">进入叙事</p>
+                  <h2>
+                    <span>故事</span>
+                    <span class="story-explainer-emphasis">正在发生<i aria-hidden="true"></i></span>
+                  </h2>
+                  <p class="story-explainer-description">选择一条具体会话，让人物行动与故事变化持续推进。</p>
+                </article>
+
+                <article class="story-explainer" data-explain-copy="2">
+                  <span class="story-explainer-ghost" aria-hidden="true">BRANCH</span>
+                  <p class="story-explainer-kicker">补全枝叶</p>
+                  <h2>
+                    <span>世界</span>
+                    <span class="story-explainer-emphasis">继续生长<i aria-hidden="true"></i></span>
+                  </h2>
+                  <p class="story-explainer-description">在另一条创作会话中，继续补充支线、历史与设定。</p>
+                </article>
+
+                <article class="story-explainer" data-explain-copy="3">
+                  <span class="story-explainer-ghost" aria-hidden="true">BEGIN</span>
+                  <p class="story-explainer-kicker">落笔开篇</p>
+                  <h2>
+                    <span>开启</span>
+                    <span class="story-explainer-emphasis">新的故事<i aria-hidden="true"></i></span>
+                  </h2>
+                  <p class="story-explainer-description">通过下方对话框，从已有世界开启一段新的故事。</p>
+                </article>
+              </div>
+
+              <div class="story-demo-progress" aria-hidden="true">
+                <span class="story-demo-progress-line"><i></i></span>
+                <span class="story-demo-progress-node" data-explain-node="0"></span>
+                <span class="story-demo-progress-node" data-explain-node="1"></span>
+                <span class="story-demo-progress-node" data-explain-node="2"></span>
+                <span class="story-demo-progress-node" data-explain-node="3"></span>
+              </div>
+            </div>
+
+            <div class="scan-media-anchor">
+              <figure class="scan-card">
+                <div class="scan-card-surface">
+                  <img
+                    class="scene-image scan-source"
+                    src="./assets/hero-blank-studio.png"
+                    alt="空白纸面创作空间"
+                  />
+
+                  <div class="scan-reveal">
+                    <img
+                      class="scene-image scan-result"
+                      src="./assets/novelx-workbench-studio-v2.png"
+                      alt="NovelX 世界创作工作台，展示会话、世界档案、地图与对象详情"
+                    />
+                  </div>
+
+                  <span
+                    class="demo-focus"
+                    data-explain-focus="0"
+                    style="--focus-x: 28.45%; --focus-y: 8.1%; --focus-w: 11.4%; --focus-h: 8.2%;"
+                    aria-hidden="true"
+                  ></span>
+                  <span
+                    class="demo-focus"
+                    data-explain-focus="1"
+                    style="--focus-x: 6.65%; --focus-y: 21.15%; --focus-w: 21.25%; --focus-h: 6.15%;"
+                    aria-hidden="true"
+                  ></span>
+                  <span
+                    class="demo-focus"
+                    data-explain-focus="2"
+                    style="--focus-x: 6.65%; --focus-y: 38.35%; --focus-w: 21.25%; --focus-h: 6.15%;"
+                    aria-hidden="true"
+                  ></span>
+                  <span
+                    class="demo-focus"
+                    data-explain-focus="3"
+                    style="--focus-x: 6.65%; --focus-y: 59.15%; --focus-w: 21.25%; --focus-h: 23.2%;"
+                    aria-hidden="true"
+                  ></span>
+
+                  <div class="scan-beam" aria-hidden="true">
+                    <span></span>
+                  </div>
+                  <span class="scan-card-glare" aria-hidden="true"></span>
+                  <span class="scan-card-frame" aria-hidden="true"></span>
+                </div>
+              </figure>
+            </div>
+          </div>
+
+          <section class="atlas-stage" id="world-atlas" aria-labelledby="atlas-title">
+          <span class="atlas-backdrop" aria-hidden="true"></span>
+          <header class="atlas-heading">
+            <p>World atlas</p>
+            <h2 id="atlas-title">世界图志</h2>
+          </header>
+
+          <div class="atlas-map-shell">
+            <div class="atlas-map">
+              <div class="atlas-layers">
+                <img
+                  class="atlas-image atlas-base"
+                  src="./assets/atlas-base-cutout.webp"
+                  alt="一张绘有山脉、森林、湖泊、河流和海岸的幻想大陆地图"
+                  width="1448"
+                  height="1086"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="atlas-highlight" data-atlas-region="western-bay" aria-hidden="true"><img class="atlas-highlight-edge" src="./assets/atlas-western-bay-layer.webp" alt="" /><img class="atlas-highlight-fill" src="./assets/atlas-western-bay-layer.webp" alt="" /></span>
+                <span class="atlas-highlight" data-atlas-region="central-ridge" aria-hidden="true"><img class="atlas-highlight-edge" src="./assets/atlas-central-ridge-layer.webp" alt="" /><img class="atlas-highlight-fill" src="./assets/atlas-central-ridge-layer.webp" alt="" /></span>
+                <span class="atlas-highlight" data-atlas-region="northern-forest" aria-hidden="true"><img class="atlas-highlight-edge" src="./assets/atlas-northern-forest-layer.webp" alt="" /><img class="atlas-highlight-fill" src="./assets/atlas-northern-forest-layer.webp" alt="" /></span>
+                <span class="atlas-highlight" data-atlas-region="northern-highlands" aria-hidden="true"><img class="atlas-highlight-edge" src="./assets/atlas-northern-highlands-layer.webp" alt="" /><img class="atlas-highlight-fill" src="./assets/atlas-northern-highlands-layer.webp" alt="" /></span>
+                <span class="atlas-highlight" data-atlas-region="eastern-lakes" aria-hidden="true"><img class="atlas-highlight-edge" src="./assets/atlas-eastern-lakes-layer.webp" alt="" /><img class="atlas-highlight-fill" src="./assets/atlas-eastern-lakes-layer.webp" alt="" /></span>
+                <span class="atlas-highlight" data-atlas-region="southern-forest" aria-hidden="true"><img class="atlas-highlight-edge" src="./assets/atlas-southern-forest-layer.webp" alt="" /><img class="atlas-highlight-fill" src="./assets/atlas-southern-forest-layer.webp" alt="" /></span>
+                <span class="atlas-highlight" data-atlas-region="southern-coast" aria-hidden="true"><img class="atlas-highlight-edge" src="./assets/atlas-southern-coast-layer.webp" alt="" /><img class="atlas-highlight-fill" src="./assets/atlas-southern-coast-layer.webp" alt="" /></span>
+              </div>
+
+              <svg class="atlas-hotspots" viewBox="0 0 1448 1086" role="group" aria-label="地图区域"></svg>
+
+              <span class="atlas-entry-glow" aria-hidden="true"></span>
+              <span class="atlas-locator" aria-hidden="true"><i></i><b></b></span>
+              <span class="atlas-region-pin" aria-hidden="true"><i></i></span>
+            </div>
+          </div>
+
+          <div class="atlas-copy" aria-live="polite">
+            <span class="atlas-region-name">完整大陆</span>
+            <p class="atlas-region-description">每一处地理，都能成为故事的起点。</p>
+          </div>
+
+          </section>
+
+          <svg
+            class="story-continuum-thread"
+            viewBox="0 0 1440 900"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path
+              class="story-continuum-haze"
+              d="M 390 150 C 270 112 148 132 92 212 C 52 300 42 462 116 556 C 196 629 315 640 366 708 C 420 779 444 858 566 882 C 624 894 676 900 716 920"
+            />
+            <path
+              class="story-arc-path story-continuum-line"
+              data-intro-path="M 390 150 C 270 112 148 132 92 212"
+              d="M 390 150 C 270 112 148 132 92 212 C 52 300 42 462 116 556 C 196 629 315 640 366 708 C 420 779 444 858 566 882 C 624 894 676 900 716 920"
+            />
+            <g class="story-arc-ornaments">
+              <circle class="story-arc-node story-arc-node-one" cx="150" cy="163" r="3" />
+              <circle class="story-arc-node story-arc-node-two" cx="334" cy="128" r="2" />
+              <path class="story-star" d="M 390 141 L 393 147 L 399 150 L 393 153 L 390 159 L 387 153 L 381 150 L 387 147 Z" />
+            </g>
+            <g class="story-continuum-ornaments">
+              <circle cx="72" cy="414" r="3" />
+              <path d="M 172 596 L 175 603 L 182 606 L 175 609 L 172 616 L 169 609 L 162 606 L 169 603 Z" />
+              <circle class="story-continuum-ring" cx="366" cy="708" r="8" />
+              <path d="M 566 874 L 571 882 L 566 890 L 561 882 Z" />
+              <circle cx="662" cy="898" r="2" />
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section class="chapter oc-archive" id="oc-archive" aria-label="角色细节与全身设定">
+        <div class="oc-archive-stage">
+          <span class="oc-continuum-band" aria-hidden="true"></span>
+
+          <div class="oc-detail-field" aria-label="角色服装与外观细节">
+            <figure class="oc-detail-card oc-detail-card-skirt">
+              <img src="./assets/oc-detail-skirt.png" alt="深色裙摆与金色刺绣细节" width="512" height="512" loading="lazy" decoding="async" />
+            </figure>
+            <figure class="oc-detail-card oc-detail-card-ribbon">
+              <img src="./assets/oc-detail-ribbon.png" alt="黑发、花朵与酒红色发带细节" width="512" height="512" loading="lazy" decoding="async" />
+            </figure>
+            <figure class="oc-detail-card oc-detail-card-bag">
+              <img src="./assets/oc-detail-bag.png" alt="棕色随身包与挂饰细节" width="512" height="512" loading="lazy" decoding="async" />
+            </figure>
+            <figure class="oc-detail-card oc-detail-card-eye">
+              <img src="./assets/oc-detail-eye.png" alt="角色灰蓝色眼睛细节" width="512" height="512" loading="lazy" decoding="async" />
+            </figure>
+            <figure class="oc-detail-card oc-detail-card-bow">
+              <img src="./assets/oc-detail-bow.png" alt="蕾丝上衣与酒红色蝴蝶结细节" width="512" height="512" loading="lazy" decoding="async" />
+            </figure>
+          </div>
+
+          <figure class="oc-master-study">
+            <img class="oc-master-plate" src="./assets/oc-butler-plate.png" alt="黑色礼服管家的全身与半身角色设定板" width="1086" height="1448" loading="lazy" decoding="async" />
+          </figure>
+
+          <svg class="oc-archive-thread" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+            <path class="oc-thread-haze" d="M 716 -20 C 706 90 770 120 752 213 C 735 300 648 332 670 420 C 691 506 783 529 768 616 C 751 710 705 760 742 920" />
+            <path class="oc-thread-line" d="M 716 -20 C 706 90 770 120 752 213 C 735 300 648 332 670 420 C 691 506 783 529 768 616 C 751 710 705 760 742 920" />
+            <g class="oc-thread-ornaments">
+              <circle cx="752" cy="213" r="3" />
+              <circle cx="670" cy="420" r="7" />
+              <path d="M 768 600 L 773 608 L 768 616 L 763 608 Z" />
+              <path d="M 688 339 L 690 345 L 696 347 L 690 349 L 688 355 L 686 349 L 680 347 L 686 345 Z" />
+              <circle class="oc-thread-ring" cx="732" cy="774" r="10" />
+            </g>
+          </svg>
+
+          <span class="oc-archive-index" aria-hidden="true">NX · OC / 001</span>
+        </div>
+      </section>
+
+      <section class="chapter oc-showcase" id="oc-showcase" aria-labelledby="oc-showcase-title">
+        <div class="oc-showcase-stage">
+          <img class="oc-showcase-world" src="./assets/oc-world-background.png" alt="" width="1672" height="941" loading="lazy" decoding="async" aria-hidden="true" />
+          <span class="oc-showcase-wash" aria-hidden="true"></span>
+          <span class="oc-continuum-band oc-continuum-band-showcase" aria-hidden="true"></span>
+
+          <svg class="oc-showcase-thread" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+            <path class="oc-showcase-thread-haze" d="M 742 -20 C 748 54 710 78 650 105 C 575 139 595 190 688 205 C 810 224 985 190 1030 235 C 1062 268 1008 297 888 303 C 784 309 739 328 730 378" />
+            <path class="oc-showcase-thread-line" d="M 742 -20 C 748 54 710 78 650 105 C 575 139 595 190 688 205 C 810 224 985 190 1030 235 C 1062 268 1008 297 888 303 C 784 309 739 328 730 378" />
+            <g class="oc-showcase-ornaments">
+              <circle cx="650" cy="105" r="3" />
+              <circle class="oc-showcase-ring" cx="1030" cy="235" r="10" />
+              <path d="M 888 291 L 893 299 L 888 307 L 883 299 Z" />
+            </g>
+          </svg>
+
+          <header class="oc-showcase-heading">
+            <span class="oc-title-rule" aria-hidden="true"></span>
+            <div>
+              <p>Original character archive</p>
+              <h2 id="oc-showcase-title">OC 展示</h2>
+            </div>
+            <span class="oc-title-rule" aria-hidden="true"></span>
+          </header>
+
+          <figure class="oc-presentation-sheet">
+            <img src="./assets/oc-presentation.png" alt="女孩与管家角色的完整造型、正背面及身高比例设定稿" width="1536" height="1024" loading="lazy" decoding="async" />
+            <span class="oc-sheet-corner oc-sheet-corner-one" aria-hidden="true"></span>
+            <span class="oc-sheet-corner oc-sheet-corner-two" aria-hidden="true"></span>
+          </figure>
+
+          <p class="oc-showcase-note">One character. A living relationship. An unfolding world.</p>
+        </div>
+      </section>
+
+      <section class="chapter world-graph" id="world-graph" aria-labelledby="world-graph-title">
+        <div class="world-graph-stage">
+          <img class="world-graph-world" src="./assets/oc-world-background.png" alt="" width="1672" height="941" loading="lazy" decoding="async" aria-hidden="true" />
+          <span class="world-graph-wash" aria-hidden="true"></span>
+          <span class="world-graph-grain" aria-hidden="true"></span>
+
+          <header class="world-graph-heading">
+            <p>World causality archive</p>
+            <h2 id="world-graph-title">世界，在因果中生长。</h2>
+            <span>从自然基底到文明遗迹，每一个设定都留下来路与去向。</span>
+          </header>
+
+          <div class="world-graph-toolbar" aria-label="图谱筛选工具">
+            <label class="world-graph-search">
+              <span>检索</span>
+              <input type="search" id="world-graph-search" placeholder="地点、组织或奇观" autocomplete="off" />
+            </label>
+            <button class="world-graph-reset" type="button">回到全域</button>
+          </div>
+
+          <div class="world-graph-workspace">
+            <div class="world-graph-canvas" id="world-graph-canvas" aria-label="灰潮大陆世界关系图谱">
+              <div class="world-graph-clusters" id="world-graph-clusters" aria-hidden="true"></div>
+              <svg class="world-graph-svg" id="world-graph-svg" aria-hidden="true">
+                <defs>
+                  <marker id="world-graph-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+                    <path d="M 0 0 L 7 3.5 L 0 7 Z"></path>
+                  </marker>
+                  <filter id="world-graph-soft-glow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="2.2" result="blur"></feGaussianBlur>
+                    <feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+                  </filter>
+                </defs>
+                <g id="world-graph-edges"></g>
+              </svg>
+              <div class="world-graph-nodes" id="world-graph-nodes"></div>
+              <p class="world-graph-caption" id="world-graph-caption" aria-live="polite">选择一个节点，查看它如何影响世界。</p>
+            </div>
+
+            <aside class="world-graph-inspector" id="world-graph-inspector" aria-live="polite">
+              <div class="world-graph-inspector-empty">
+                <span aria-hidden="true">✦</span>
+                <p>选择一个节点</p>
+                <small>它的来源、摘要与因果邻域会在这里展开。</small>
+              </div>
+            </aside>
+          </div>
+
+          <div class="world-graph-legend" aria-label="关系图例">
+            <span><i class="is-causal"></i>因果关系</span>
+            <span><i class="is-association"></i>待定义关系</span>
+            <span><b>27</b> 世界实体</span>
+            <span><b>103</b> 条关系</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter closing" id="closing" aria-labelledby="closing-title">
+        <div class="closing-stage">
+          <div class="closing-graph-echo" aria-hidden="true">
+            <img src="./assets/oc-world-background.png" alt="" width="1672" height="941" loading="lazy" decoding="async" />
+            <span></span>
+          </div>
+
+          <figure class="closing-workbench-card" aria-hidden="true">
+            <div class="closing-workbench-surface">
+              <img src="./assets/novelx-workbench-studio-v2.png" alt="" width="2048" height="1152" loading="lazy" decoding="async" />
+              <div class="closing-paper-reveal">
+                <img src="./assets/hero-blank-studio.png" alt="" width="1668" height="941" />
+                <span class="closing-paper-shade"></span>
+              </div>
+              <div class="closing-scan-beam">
+                <span></span>
+              </div>
+              <span class="closing-card-sheen"></span>
+            </div>
+            <span class="closing-card-frame"></span>
+          </figure>
+
+          <div class="closing-hero">
+            <svg class="closing-flourish" viewBox="0 0 1000 620" aria-hidden="true">
+              <defs>
+                <filter id="closing-line-glow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="7" />
+                </filter>
+              </defs>
+              <path class="closing-flourish-haze" d="M 228 444 C 354 548 573 548 738 428 C 876 328 871 190 756 147 C 660 112 535 142 474 218" />
+              <path class="closing-flourish-line" d="M 228 444 C 354 548 573 548 738 428 C 876 328 871 190 756 147 C 660 112 535 142 474 218" />
+              <g class="closing-ornaments">
+                <path d="M 756 133 L 760 143 L 770 147 L 760 151 L 756 161 L 752 151 L 742 147 L 752 143 Z" />
+                <circle cx="838" cy="278" r="4" />
+                <circle class="closing-ornament-ring" cx="728" cy="435" r="9" />
+                <path d="M 330 488 L 335 496 L 330 504 L 325 496 Z" />
+                <circle cx="251" cy="457" r="2.5" />
+              </g>
+            </svg>
+
+            <div class="closing-copy">
+              <h2 id="closing-title" aria-label="准备开始你的故事">
+                <span>准备开始</span>
+                <span>你的故事</span>
+              </h2>
+              <a class="closing-return" href="./index.html" aria-label="返回首页">
+                <span class="closing-return-label">回到开头</span>
+                <span class="closing-return-rail" aria-hidden="true">
+                  <span class="closing-return-line"></span>
+                  <span class="closing-return-drop"></span>
+                  <span class="closing-return-chevron"><span></span></span>
+                </span>
+                <span class="closing-return-ornament closing-return-spark closing-return-spark-one" aria-hidden="true"></span>
+                <span class="closing-return-ornament closing-return-spark closing-return-spark-two" aria-hidden="true"></span>
+                <span class="closing-return-ornament closing-return-accent" aria-hidden="true"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <noscript>此页面需要 JavaScript 才能播放滚动叙事，静态内容仍可正常浏览。</noscript>
+    <script src="./assets/atlas-hotspots.js"></script>
+    <script src="./vendor/gsap.min.js"></script>
+    <script src="./vendor/ScrollTrigger.min.js"></script>
+    <script src="./assets/gray-tide-graph-data.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

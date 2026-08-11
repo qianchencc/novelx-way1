@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101a20" />
+    <meta
+      name="description"
+      content="NovelX 高级展示页第一轮视觉方向：星路档案馆、午夜因果图、编辑仪器。"
+    />
+    <title>NovelX / Way 1 / Visual Directions</title>
+    <link rel="stylesheet" href="./directions.css" />
+  </head>
+  <body>
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+    <header class="site-header">
+      <a class="wordmark" href="#astral" aria-label="返回第一个方向">
+        <span class="wordmark-mark" aria-hidden="true">N</span>
+        <span>NovelX</span>
+      </a>
+
+      <nav class="direction-nav" aria-label="视觉方向">
+        <button type="button" data-target="astral" aria-current="true">A</button>
+        <button type="button" data-target="midnight">B</button>
+        <button type="button" data-target="editorial">C</button>
+      </nav>
+
+      <button class="reference-trigger" type="button" aria-haspopup="dialog">
+        查看原图
+      </button>
+    </header>
+
+    <main>
+      <section class="concept concept-astral" id="astral" data-concept="A">
+        <img
+          class="concept-backdrop"
+          src="./assets/direction-a-astral-archive.png"
+          alt="纸张档案过渡到深色山河与金色星路的横向视觉"
+        />
+        <div class="concept-vignette" aria-hidden="true"></div>
+
+        <div class="concept-content">
+          <p class="concept-kicker">星路档案馆</p>
+          <h1>让一次灵感，<br />生长为一个世界。</h1>
+          <p class="concept-copy">
+            最接近现有海报的品牌延伸。纸面是创作的起点，星路把地图、角色、事件与版本连接成仍在生长的世界。
+          </p>
+          <div class="concept-actions">
+            <button class="select-direction" type="button" data-choice="A">
+              选择此方向
+            </button>
+            <a href="#midnight">继续比较</a>
+          </div>
+        </div>
+
+        <div class="concept-index" aria-hidden="true">
+          <span>01</span>
+          <i></i>
+          <span>Archive</span>
+        </div>
+      </section>
+
+      <section class="concept concept-midnight" id="midnight" data-concept="B">
+        <img
+          class="concept-backdrop"
+          src="./assets/direction-b-midnight-causality.png"
+          alt="午夜墨色地图上由金色关系线连接世界、文档、人物与事件的视觉"
+        />
+        <div class="concept-vignette" aria-hidden="true"></div>
+
+        <div class="concept-content">
+          <p class="concept-kicker">午夜因果图</p>
+          <h2>世界不是被写完的。<br />它沿因果持续生长。</h2>
+          <p class="concept-copy">
+            最具 NovelX 产品辨识度的方向。把图谱、来源和世界地图统一成一座夜间运行的活体档案。
+          </p>
+          <div class="concept-actions">
+            <button class="select-direction" type="button" data-choice="B">
+              选择此方向
+            </button>
+            <a href="#editorial">继续比较</a>
+          </div>
+        </div>
+
+        <div class="concept-index" aria-hidden="true">
+          <span>02</span>
+          <i></i>
+          <span>Causality</span>
+        </div>
+      </section>
+
+      <section class="concept concept-editorial" id="editorial" data-concept="C">
+        <img
+          class="concept-backdrop"
+          src="./assets/direction-c-editorial-instrument.png"
+          alt="留白纸面、编辑网格、地图档案与朱砂索引线构成的极简视觉"
+        />
+        <div class="concept-vignette" aria-hidden="true"></div>
+
+        <div class="concept-content">
+          <p class="concept-kicker">编辑仪器</p>
+          <h2>创作，需要一套<br />可信的仪器。</h2>
+          <p class="concept-copy">
+            最克制、最产品化的方向。以编辑出版和版本档案为核心，让高级感来自精度、留白与材料本身。
+          </p>
+          <div class="concept-actions">
+            <button class="select-direction" type="button" data-choice="C">
+              选择此方向
+            </button>
+            <a href="#astral">回到开场</a>
+          </div>
+        </div>
+
+        <div class="concept-index" aria-hidden="true">
+          <span>03</span>
+          <i></i>
+          <span>Instrument</span>
+        </div>
+      </section>
+    </main>
+
+    <div class="selection-status" role="status" aria-live="polite"></div>
+
+    <dialog class="reference-dialog" aria-labelledby="reference-title">
+      <div class="dialog-header">
+        <div>
+          <p>设计输入</p>
+          <h2 id="reference-title">附件原图</h2>
+        </div>
+        <button class="dialog-close" type="button" aria-label="关闭原图对照" title="关闭">×</button>
+      </div>
+      <div class="reference-grid">
+        <figure>
+          <img src="./assets/reference-poster.png" alt="NovelX 项目海报原图" />
+          <figcaption>品牌海报 / 视觉母题</figcaption>
+        </figure>
+        <figure>
+          <img src="./assets/reference-product.png" alt="NovelX 产品界面原图" />
+          <figcaption>产品原图 / 界面证据</figcaption>
+        </figure>
+      </div>
+    </dialog>
+
+    <script src="./directions.js"></script>
+  </body>
+</html>

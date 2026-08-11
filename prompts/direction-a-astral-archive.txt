@@ -1,0 +1,13 @@
+Use case: ads-marketing
+Asset type: 16:9 horizontal landing-page hero visual plate for NovelX, Direction A "The Astral Archive"
+Primary request: Create a premium, implementation-friendly hero background that translates the references into a wide cinematic website opening for an Agent-native novel and world creation workbench.
+Scene/backdrop: A continuous composition moving from warm bone archival paper on the left into a deep midnight ink landscape on the right, with a restrained luminous gold path connecting an elegant worldbuilding desk at bottom center to distant mountains and a subtle constellation-like causal graph.
+Subject: Tactile archival papers, world map fragments, one open book, restrained brass instrument, luminous path, distant tiny human silhouette for scale.
+Style/medium: Mature East-Asian editorial fantasy, ink wash plus colored pen and watercolor-gouache texture, premium campaign art, not photorealistic, not 3D.
+Composition/framing: True 16:9 landscape. Preserve a large calm clean safe area on the upper-left and center-left for HTML brand copy. Visual density grows toward the right and bottom. Keep critical imagery away from the text-safe area.
+Lighting/mood: Quiet awe, refined, intelligent, trustworthy, cinematic without spectacle.
+Color palette: Warm bone #F3EBDD, midnight ink #101A20, antique gold #B58A42, tiny oxidized vermilion #8C3B2E.
+Materials/textures: Visible paper fibers, ink pooling, fine cartographic linework, subtle print grain.
+Text: No words, no letters, no fake UI text, no watermark.
+Constraints: One focused hero section only; no collage board, browser chrome, or card grid; generous negative space; clean hierarchy; implementable as a background asset.
+Avoid: Beige-only monotony, generic purple AI glow, neon, glassmorphism, random floating icons, photorealistic people, glossy game poster, excessive magic particles, illegible interface mockups.

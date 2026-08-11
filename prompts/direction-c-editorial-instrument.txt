@@ -1,0 +1,13 @@
+Use case: ads-marketing
+Asset type: 16:9 horizontal landing-page hero visual plate for NovelX, Direction C "The Editorial Instrument"
+Primary request: Create a premium minimalist editorial hero background that presents NovelX as a precise creative instrument rather than a fantasy game.
+Scene/backdrop: Warm off-white tactile paper field with a disciplined Swiss-editorial grid. One oversized archival folio and one wide hand-drawn world-map sheet overlap off-grid across the lower-right two-thirds. Fine oxblood registration lines and antique-gold indexing marks suggest versioning, provenance, and causal structure. A narrow vertical strip of deep ink anchors the far right.
+Subject: Large paper folio, hand-drawn map crop, a few source tabs, subtle relation lines, one black fountain pen and a small brass checkpoint seal. No fake application interface.
+Style/medium: High-end editorial product campaign, minimal East-Asian book design, flat print textures, colored pen and restrained watercolor, calm and exact.
+Composition/framing: True 16:9 landscape. Off-grid editorial offset. Preserve approximately the left 38 percent as nearly empty clean HTML typography space. Product artifacts begin near center and extend beyond the bottom/right crop. Crisp geometry, almost no shadow.
+Lighting/mood: Daylight paper studio, serious, crafted, calm, contemporary.
+Color palette: Bone #F7F3EA, charcoal #202321, oxblood #773B32, pale mineral blue #B9C9C7, antique gold #A78345.
+Materials/textures: Uncoated paper, blind emboss, fine ink, light pencil construction marks, no glossy surfaces.
+Text: No words, no letters, no fake labels, no watermark.
+Constraints: One focused hero section only; generous negative space; flat composition; no gradients; no heavy shadows; no rounded card spam; implementable as a clean website background.
+Avoid: Beige luxury cliche, serif fashion ad, generic SaaS dashboard, glassmorphism, 3D mockups, vibrant color fields, neon, decorative blobs, fake UI text.

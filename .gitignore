@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+dist/
+build/
+*.log
+
+# Generated preview and video artifacts
+previews/
+videos/
+novelx-showcase-video/
+novelx-single.html

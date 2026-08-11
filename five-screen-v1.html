@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d1517" />
+    <meta
+      name="description"
+      content="NovelX 诺文，一个面向小说、世界与 OC 创作者的 Agent-native 创作工作台。"
+    />
+    <title>NovelX 诺文 | 让灵感生长为一个世界</title>
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
+    <link rel="preload" href="./assets/direction-a-astral-archive.jpg" as="image" />
+    <link rel="stylesheet" href="./five-screen-v1.css" />
+  </head>
+  <body>
+    <div class="page-progress" aria-hidden="true"><span></span></div>
+
+    <header class="site-header">
+      <a class="wordmark" href="#opening" aria-label="NovelX 首页">
+        <span class="wordmark-glyph" aria-hidden="true">N</span>
+        <span>NovelX</span>
+        <span class="wordmark-cn">诺文</span>
+      </a>
+
+      <nav class="site-nav" aria-label="页面章节">
+        <a href="#agent">真实创作</a>
+        <a href="#objects">创作对象</a>
+        <a href="#causality">因果推演</a>
+        <a href="#showcase">作品呈现</a>
+      </nav>
+
+      <span class="header-note">Agent-native creation workbench</span>
+    </header>
+
+    <main>
+      <section class="chapter hero" id="opening" data-chapter="opening">
+        <img
+          class="hero-art"
+          src="./assets/direction-a-astral-archive.jpg"
+          alt="纸面山河向深墨世界延展，一条金色路径穿过档案与群山"
+        />
+        <div class="hero-wash" aria-hidden="true"></div>
+
+        <div class="hero-copy">
+          <p class="hero-brand">NovelX 诺文</p>
+          <h1>让一次灵感，<br />生长为一个世界。</h1>
+          <p>
+            不是一次回答，而是一套持续生长、可检查、可编辑、可恢复的创作工程。
+          </p>
+        </div>
+
+        <svg class="hero-route" viewBox="0 0 720 620" aria-hidden="true">
+          <path d="M58 572 C198 548 210 462 304 432 C426 392 402 276 520 234 C624 196 592 92 680 48" />
+        </svg>
+      </section>
+
+      <section class="chapter agent-chapter" id="agent" data-chapter="agent">
+        <div class="agent-stage">
+          <div class="agent-grid">
+            <div class="agent-copy">
+              <h2>从一句目标，到一组可确认的改动。</h2>
+              <p>
+                Agent 读取项目、组织任务、提出候选，再由创作者决定哪些内容进入作品。
+              </p>
+
+              <ol class="agent-beats" aria-label="真实 Agent Mode 过程">
+                <li data-beat="0">
+                  <strong>提出目标</strong>
+                  <span>从创作意图开始，不从空白表单开始。</span>
+                </li>
+                <li data-beat="1">
+                  <strong>检索项目</strong>
+                  <span>读取相关世界、角色、文档与来源。</span>
+                </li>
+                <li data-beat="2">
+                  <strong>审阅候选</strong>
+                  <span>把建议组织为可检查的候选改动。</span>
+                </li>
+                <li data-beat="3">
+                  <strong>进入作品</strong>
+                  <span>经确认后写入版本化的创作对象。</span>
+                </li>
+              </ol>
+            </div>
+
+            <figure class="agent-proof">
+              <div class="agent-media">
+                <img
+                  class="agent-poster"
+                  src="./assets/reference-product.jpg"
+                  alt="NovelX 产品界面原图，包含会话、世界档案、地图和对象详情"
+                />
+                <video
+                  class="agent-video"
+                  muted
+                  playsinline
+                  preload="metadata"
+                  poster="./assets/reference-product.jpg"
+                  data-src="./assets/agent-mode-real.mp4"
+                  data-available="false"
+                  aria-label="NovelX 真实 Agent Mode 产品录屏"
+                ></video>
+                <div class="video-sheen" aria-hidden="true"></div>
+              </div>
+              <figcaption>
+                <span>当前使用产品原图</span>
+                <span class="video-state">真实录屏待接入</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter archive-chapter" id="objects" data-chapter="objects">
+        <div class="archive-heading">
+          <h2>创作对象，不再散落在对话里。</h2>
+          <p>世界、角色、故事与来源各自独立，又能通过关系和版本继续生长。</p>
+        </div>
+
+        <div class="archive-frame" data-active-index="0">
+          <img
+            class="archive-art"
+            src="./assets/section-3-object-archive.jpg"
+            alt="世界地图、角色档案、故事手稿与来源资料组成的创作档案桌"
+          />
+          <div class="archive-grid">
+            <button class="archive-panel is-active" type="button" data-archive="0" aria-expanded="true">
+              <span class="archive-name">世界基底</span>
+              <span class="archive-detail">
+                <strong>霜脊山系</strong>
+                <small>地理、国家、组织与规则在同一世界中互相引用。</small>
+              </span>
+            </button>
+            <button class="archive-panel" type="button" data-archive="1" aria-expanded="false">
+              <span class="archive-name">OC 基底</span>
+              <span class="archive-detail">
+                <strong>洛伦</strong>
+                <small>身份、动机、经历与关系可以继续被故事调用。</small>
+              </span>
+            </button>
+            <button class="archive-panel" type="button" data-archive="2" aria-expanded="false">
+              <span class="archive-name">故事项目</span>
+              <span class="archive-detail">
+                <strong>灰烬之夜</strong>
+                <small>大纲、正文、事件与版本保留清晰的创作脉络。</small>
+              </span>
+            </button>
+            <button class="archive-panel" type="button" data-archive="3" aria-expanded="false">
+              <span class="archive-name">来源库</span>
+              <span class="archive-detail">
+                <strong>可追溯的素材</strong>
+                <small>原始文档与参考图保留出处，并与 Canon、图谱分层存在。</small>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="object-index" aria-label="NovelX 创作对象">
+          <div class="object-index-track">
+            <span>世界</span><i></i><span>角色</span><i></i><span>故事</span><i></i><span>来源</span><i></i><span>Canon</span><i></i><span>关系</span><i></i><span>版本</span><i></i>
+            <span aria-hidden="true">世界</span><i aria-hidden="true"></i><span aria-hidden="true">角色</span><i aria-hidden="true"></i><span aria-hidden="true">故事</span><i aria-hidden="true"></i><span aria-hidden="true">来源</span><i aria-hidden="true"></i><span aria-hidden="true">Canon</span><i aria-hidden="true"></i><span aria-hidden="true">关系</span><i aria-hidden="true"></i><span aria-hidden="true">版本</span><i aria-hidden="true"></i>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter causal-chapter" id="causality" data-chapter="causality">
+        <div class="causal-stage">
+          <img
+            class="causal-map"
+            src="./assets/section-4-causal-map.jpg"
+            alt="从雪山、河流、王国延伸到远方事件的因果世界地图"
+          />
+          <div class="causal-wash" aria-hidden="true"></div>
+
+          <div class="causal-heading">
+            <h2>世界会沿因果生长。</h2>
+            <p>一次地理选择，会继续改变气候、国家、角色与事件。</p>
+          </div>
+
+          <svg class="causal-line" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M108 190 C185 208 205 328 292 354 C374 378 402 232 488 244 C566 255 612 350 694 328 C770 306 800 382 862 370 C916 360 922 174 968 116" />
+          </svg>
+
+          <div class="causal-nodes" aria-label="因果链">
+            <button type="button" data-causal="0" style="--x: 11%; --y: 34%">山脉</button>
+            <button type="button" data-causal="1" style="--x: 29%; --y: 63%">河流</button>
+            <button type="button" data-causal="2" style="--x: 49%; --y: 44%">气候</button>
+            <button type="button" data-causal="3" style="--x: 69%; --y: 59%">王国</button>
+            <button type="button" data-causal="4" style="--x: 86%; --y: 66%">角色</button>
+            <button type="button" data-causal="5" style="--x: 92%; --y: 21%">事件</button>
+          </div>
+
+          <div class="causal-notes" aria-live="polite">
+            <article data-causal-note="0" class="is-active">
+              <strong>山脉抬高地势</strong>
+              <span>地形先决定水系与通行边界。</span>
+            </article>
+            <article data-causal-note="1">
+              <strong>河流穿过谷地</strong>
+              <span>聚落、贸易与争夺由此出现。</span>
+            </article>
+            <article data-causal-note="2">
+              <strong>冷湿气候成形</strong>
+              <span>资源与生活方式开始分化。</span>
+            </article>
+            <article data-causal-note="3">
+              <strong>北境王国建立</strong>
+              <span>边界、制度与冲突得到落点。</span>
+            </article>
+            <article data-causal-note="4">
+              <strong>角色被卷入关系</strong>
+              <span>动机不再脱离世界条件存在。</span>
+            </article>
+            <article data-causal-note="5">
+              <strong>事件成为必然</strong>
+              <span>故事从因果中发生，而不是凭空降临。</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter showcase-chapter" id="showcase" data-chapter="showcase">
+        <div class="showcase-stage">
+          <img
+            class="showcase-scene"
+            src="./assets/section-5-showcase-scene.jpg"
+            alt="旅人沿金色河流走向北境山城的故事场景"
+          />
+          <div class="showcase-wash" aria-hidden="true"></div>
+
+          <div class="showcase-copy">
+            <h2>
+              让故事的每一层，
+              <span class="inline-scene" aria-hidden="true">
+                <img src="./assets/section-5-showcase-scene.jpg" alt="" />
+              </span>
+              在同一作品中出现。
+            </h2>
+            <p>正文、图片、角色与关系彼此引用，也都保留自己的来源与版本。</p>
+            <ul class="showcase-parts" aria-label="Showcase 组成">
+              <li>正文</li>
+              <li>图片</li>
+              <li>角色</li>
+              <li>关系</li>
+            </ul>
+          </div>
+
+          <figure class="product-proof">
+            <img src="./assets/reference-product.jpg" alt="NovelX 产品界面原图" />
+            <figcaption>产品界面原图</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <noscript>此页面需要 JavaScript 才能播放滚动叙事，静态内容仍可正常阅读。</noscript>
+    <script src="./vendor/gsap.min.js"></script>
+    <script src="./vendor/ScrollTrigger.min.js"></script>
+    <script src="./five-screen-v1.js"></script>
+  </body>
+</html>

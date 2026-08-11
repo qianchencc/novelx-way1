@@ -1,0 +1,13 @@
+Use case: ads-marketing
+Asset type: 16:9 horizontal landing-page hero visual plate for NovelX, Direction B "Midnight Causality"
+Primary request: Create a premium dark editorial hero background for an Agent-native worldbuilding workbench where ideas become source-bound causal systems.
+Scene/backdrop: Full-bleed midnight ink cartography. A vast mountain-and-river world seen like a living atlas at night. Fine antique-gold graph lines connect places, documents, characters, and events as a subtle constellation. A single parchment map surface emerges from darkness near the lower third, as though an archive is becoming a world.
+Subject: Layered ink landscape, luminous causal path, restrained map contours, fragments of vellum, a single open manuscript and precise brass compass geometry. No people close-up.
+Style/medium: Mature dark editorial fantasy, Chinese ink painting fused with precise scientific cartography and archival printmaking, sophisticated and sparse, not game key art.
+Composition/framing: True 16:9 landscape. Image-as-canvas. Preserve a clean low-density safe area in the upper center and upper-left for large HTML typography. Place the visual climax at center-right and lower-right. Strong foreground-to-distance depth.
+Lighting/mood: Nocturnal, contemplative, intelligent, exacting, quietly monumental.
+Color palette: Deep ink #091116, charcoal blue #13252B, old paper #E8DDC7, antique gold #B78A42, restrained cinnabar #874237.
+Materials/textures: Matte ink, dry-brush mountain edges, engraved lines, sparse gold foil points, fine paper grain.
+Text: No words, no letters, no fake labels, no watermark.
+Constraints: One focused hero section only; no dashboard cards; no obvious sci-fi HUD; generous black negative space; high contrast safe area for HTML copy.
+Avoid: Purple-blue AI gradients, neon galaxy, excessive stars, glowing orbs, cyberpunk, photorealism, 3D render, glossy fantasy poster, cluttered UI.
