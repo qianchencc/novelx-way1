@@ -845,6 +845,14 @@
     const productWindow = document.querySelector(".growth-product-window");
     const windowSource = document.querySelector(".growth-window-source");
     const windowFinal = document.querySelector(".growth-window-final");
+    const windowFront = document.querySelector(".growth-window-front");
+    const windowAtlasPage = document.querySelector(".growth-window-atlas-page");
+    const productMap = document.querySelector(".atlas-product-map");
+    const pageShadow = document.querySelector(".growth-page-shadow");
+    const atlas = document.querySelector(".growth-continuum-atlas");
+    const atlasHeading = document.querySelector(".continuum-atlas-heading");
+    const atlasMapShell = document.querySelector(".continuum-atlas-map-shell");
+    const atlasCopy = document.querySelector(".continuum-atlas-copy");
     const destinationCopy = [...document.querySelectorAll(".growth-world-copy, .growth-world-arc")];
     const heading = document.querySelector(".agent-growth-heading");
     const progressCard = document.querySelector(".growth-progress-card");
@@ -865,7 +873,7 @@
     const traces = [...document.querySelectorAll(".growth-progress-traces i")];
     const startrails = document.querySelector(".growth-startrails");
     const index = document.querySelector(".agent-growth-index");
-    if (!growthChapter || !transitionSection || !transitionStage || !sourceFrame || !blueprint || !veil || !destination || !productWindow || !windowSource || !windowFinal || !heading || !progressCard || !progressName || !progressPrefix || !progressValue || !commandName || !commandGrowthWord) return;
+    if (!growthChapter || !transitionSection || !transitionStage || !sourceFrame || !blueprint || !veil || !destination || !productWindow || !windowSource || !windowFinal || !windowFront || !windowAtlasPage || !productMap || !atlas || !atlasMapShell || !heading || !progressCard || !progressName || !progressPrefix || !progressValue || !commandName || !commandGrowthWord) return;
 
     const sharedName = document.createElement("span");
     sharedName.className = "growth-shared-name";
@@ -1131,6 +1139,17 @@
       };
     };
 
+    const getAtlasOrigin = () => {
+      const source = productMap.getBoundingClientRect();
+      const target = atlasMapShell.getBoundingClientRect();
+      return {
+        x: source.left + source.width / 2 - (target.left + target.width / 2),
+        y: source.top + source.height / 2 - (target.top + target.height / 2),
+        scaleX: source.width / Math.max(1, target.width),
+        scaleY: source.height / Math.max(1, target.height),
+      };
+    };
+
     const getCommandGeometry = () => {
       const sourceRect = (fixedCommandGrowthWord || commandGrowthWord).getBoundingClientRect();
       const sharedRect = sharedName.getBoundingClientRect();
@@ -1169,6 +1188,10 @@
         gsap.set(destination, { autoAlpha: 1 });
         gsap.set(windowSource, { autoAlpha: 0 });
         gsap.set(windowFinal, { autoAlpha: 1 });
+        gsap.set(windowFront, { autoAlpha: 0 });
+        gsap.set(atlas, { autoAlpha: 1, backgroundColor: "#d8cbb7" });
+        gsap.set([atlasHeading, atlasCopy], { autoAlpha: 1, y: 0 });
+        atlas.classList.add("is-ready");
         gsap.set(veil, { autoAlpha: 0 });
         gsap.set([heading, orbitDecoration, traces, index], { autoAlpha: 0 });
         gsap.set(startrails, { autoAlpha: 0 });
@@ -1188,6 +1211,12 @@
         clipPath: "inset(25.5% 54.8% 60% 29.9% round 5px)",
         scale: 1,
       });
+      gsap.set(windowFront, { rotationY: 0, autoAlpha: 1, transformOrigin: "left center" });
+      gsap.set(windowAtlasPage, { autoAlpha: 0 });
+      gsap.set(pageShadow, { autoAlpha: 0, xPercent: 32 });
+      gsap.set(atlas, { autoAlpha: 0, backgroundColor: "rgba(216,203,183,0)" });
+      gsap.set([atlasHeading, atlasCopy], { autoAlpha: 0, y: 14 });
+      atlas.classList.remove("is-ready");
       gsap.set(veil, { autoAlpha: 1 });
       gsap.set(heading, { autoAlpha: 0, y: 28 });
       gsap.set(progressCard, {
@@ -1219,18 +1248,19 @@
       });
       enterTimeline
         .addLabel("clearCopy", 0)
-        .addLabel("handoffGrowth", .28)
-        .addLabel("showProgress", .42)
-        .fromTo(handoffBackdrop, { autoAlpha: 0 }, { autoAlpha: 1, duration: .08, immediateRender: false }, "clearCopy")
-        .to([commandSlash, commandCopy, commandCaret, fixedCommandSlash, fixedCommandCopy, fixedCommandCaret].filter(Boolean), { autoAlpha: 0, duration: .28, ease: "power2.in" }, "clearCopy")
-        .fromTo(growthAura, { autoAlpha: 1 }, { autoAlpha: 0, duration: .3, immediateRender: false }, "clearCopy")
+        .addLabel("captureGrowth", 0)
+        .addLabel("handoffGrowth", .36)
+        .addLabel("showProgress", .48)
         .set(sharedName, {
           x: () => getCommandGeometry().x,
           y: () => getCommandGeometry().y,
           scale: () => getCommandGeometry().scale,
           autoAlpha: 1,
-        }, "handoffGrowth")
-        .set([commandGrowthWord, fixedCommandGrowthWord].filter(Boolean), { autoAlpha: 0 }, "handoffGrowth")
+        }, "captureGrowth")
+        .set([commandGrowthWord, fixedCommandGrowthWord].filter(Boolean), { autoAlpha: 0 }, "captureGrowth")
+        .fromTo(handoffBackdrop, { autoAlpha: 0 }, { autoAlpha: 1, duration: .08, immediateRender: false }, "clearCopy")
+        .to([commandSlash, commandCopy, commandCaret, fixedCommandSlash, fixedCommandCopy, fixedCommandCaret].filter(Boolean), { autoAlpha: 0, duration: .3, ease: "power2.in" }, "clearCopy")
+        .fromTo(growthAura, { autoAlpha: 1 }, { autoAlpha: 0, duration: .32, immediateRender: false }, "clearCopy")
         .to(sharedName, {
           x: () => getProgressNameGeometry().x,
           y: () => getProgressNameGeometry().y,
@@ -1245,9 +1275,9 @@
           ease: "power3.inOut",
         }, "handoffGrowth")
         .to(progressCard, { autoAlpha: 1, duration: .34, ease: "power2.out" }, "showProgress")
-        .to(progressPrefix, { autoAlpha: 1, duration: .12, ease: "power2.out" }, .62)
-        .to(progressName, { autoAlpha: 1, duration: .07 }, .72)
-        .to(sharedName, { autoAlpha: 0, duration: .07 }, .72)
+        .to(progressPrefix, { autoAlpha: 1, duration: .12, ease: "power2.out" }, .68)
+        .to(progressName, { autoAlpha: 1, duration: .07 }, .78)
+        .to(sharedName, { autoAlpha: 0, duration: .07 }, .78)
         .to({}, { duration: .12 });
 
       const growthTimeline = gsap.timeline({
@@ -1258,7 +1288,10 @@
           end: "bottom bottom",
           scrub: 0.8,
           invalidateOnRefresh: true,
-          onUpdate: renderProgress,
+          onUpdate(self) {
+            renderProgress();
+            atlas.classList.toggle("is-ready", self.progress >= .92);
+          },
         },
       });
 
@@ -1267,6 +1300,11 @@
         .addLabel("shrinkWorkbench", .66)
         .addLabel("landProgress", .80)
         .addLabel("revealGrowth", .93)
+        .addLabel("holdWorld", 1.10)
+        .addLabel("turnAtlasPage", 1.25)
+        .addLabel("holdAtlasPage", 1.57)
+        .addLabel("liftAtlas", 1.72)
+        .addLabel("atlasReady", 2.12)
         .to(handoffBackdrop, { autoAlpha: 0, duration: .12 }, 0)
         .to(heading, { autoAlpha: 1, y: 0, duration: .08, ease: "power2.out" }, 0)
         .to(orbitDecoration, { autoAlpha: 1, scale: 1, rotation: 0, duration: .1, ease: "power2.out" }, 0)
@@ -1333,23 +1371,37 @@
           ease: "power2.inOut",
         }, "revealGrowth")
         .to(progressCard, { autoAlpha: 0, scaleX: "*=.94", scaleY: "*=.94", duration: .07, ease: "power2.in" }, "revealGrowth+=.07")
-        .set(windowSource, { autoAlpha: 0 }, "revealGrowth+=.14");
+        .set(windowSource, { autoAlpha: 0 }, "revealGrowth+=.14")
+        .to({}, { duration: .15 }, "holdWorld")
+        .set(progressCard, { autoAlpha: 0, visibility: "hidden" }, "turnAtlasPage")
+        .set(atlas, { autoAlpha: 0, visibility: "hidden", pointerEvents: "none" }, "turnAtlasPage")
+        .set(windowAtlasPage, { autoAlpha: 1 }, "turnAtlasPage")
+        .to(destinationCopy, { autoAlpha: 0, y: -16, duration: .12, ease: "power2.in" }, "turnAtlasPage")
+        .to(windowFront, { rotationY: -176, duration: .30, ease: "power3.inOut" }, "turnAtlasPage")
+        .fromTo(pageShadow, { autoAlpha: 0, xPercent: 34 }, { autoAlpha: .62, xPercent: -24, duration: .15, ease: "power2.inOut" }, "turnAtlasPage")
+        .to(pageShadow, { autoAlpha: 0, duration: .15, ease: "power2.inOut" }, "turnAtlasPage+=.15")
+        .set(windowFront, { autoAlpha: 0 }, "holdAtlasPage")
+        .to({}, { duration: .15 }, "holdAtlasPage")
+        .set(atlas, { autoAlpha: 1, visibility: "visible" }, "liftAtlas")
+        .set(atlasMapShell, {
+          x: () => getAtlasOrigin().x,
+          y: () => getAtlasOrigin().y,
+          scaleX: () => getAtlasOrigin().scaleX,
+          scaleY: () => getAtlasOrigin().scaleY,
+          transformOrigin: "center",
+        }, "liftAtlas")
+        .to([document.querySelector(".growth-world-background"), document.querySelector(".growth-world-wash"), document.querySelector(".growth-world-grain")].filter(Boolean), { autoAlpha: 0, duration: .22, ease: "power2.in" }, "liftAtlas+=.04")
+        .to(atlas, { backgroundColor: "#d8cbb7", duration: .23, ease: "power2.inOut" }, "liftAtlas+=.04")
+        .to(productWindow, { autoAlpha: 0, duration: .10, ease: "power2.in" }, "liftAtlas+=.08")
+        .to(atlasMapShell, { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: .34, ease: "power3.inOut" }, "liftAtlas")
+        .to(atlasHeading, { autoAlpha: 1, y: 0, duration: .14, ease: "power2.out" }, "liftAtlas+=.27")
+        .to(atlasCopy, { autoAlpha: 1, y: 0, duration: .14, ease: "power2.out" }, "liftAtlas+=.30")
+        .to({}, { duration: .22 }, "atlasReady");
     });
   }
 
-  function initAtlasContinuum() {
-    const section = document.querySelector(".atlas-continuum");
-    const stage = document.querySelector(".atlas-continuum-stage");
-    const world = document.querySelector(".atlas-continuum-world");
-    const copy = document.querySelector(".atlas-continuum-copy");
-    const book = document.querySelector(".atlas-book-shell");
-    const front = document.querySelector(".atlas-book-front");
-    const back = document.querySelector(".atlas-book-back");
-    const productMap = document.querySelector(".atlas-product-map");
-    const pageShadow = document.querySelector(".atlas-page-shadow");
-    const atlas = document.querySelector(".continuum-atlas");
-    const heading = document.querySelector(".continuum-atlas-heading");
-    const mapShell = document.querySelector(".continuum-atlas-map-shell");
+  function initAtlasInteraction() {
+    const atlas = document.querySelector(".growth-continuum-atlas");
     const map = document.querySelector(".continuum-atlas-map");
     const hotspotSvg = document.querySelector(".continuum-atlas-hotspots");
     const highlights = [...document.querySelectorAll(".continuum-atlas-highlight")];
@@ -1357,9 +1409,7 @@
     const pin = document.querySelector(".continuum-atlas-pin");
     const regionName = document.querySelector(".continuum-region-name");
     const regionDescription = document.querySelector(".continuum-region-description");
-    const atlasCopy = document.querySelector(".continuum-atlas-copy");
-    const index = document.querySelector(".atlas-continuum-index");
-    if (!section || !stage || !world || !copy || !book || !front || !back || !productMap || !atlas || !mapShell || !map || !hotspotSvg) return;
+    if (!atlas || !map || !hotspotSvg) return;
 
     const metadata = {
       "western-bay": ["西南海湾", "海湾、孤岛与通向大陆腹地的水路。"],
@@ -1437,76 +1487,89 @@
       gsap.set(locator, { autoAlpha: .58, x: event.clientX - bounds.left, y: event.clientY - bounds.top });
     });
 
-    const getMapOrigin = () => {
-      const source = productMap.getBoundingClientRect();
-      const destination = mapShell.getBoundingClientRect();
-      return {
-        x: source.left + source.width / 2 - (destination.left + destination.width / 2),
-        y: source.top + source.height / 2 - (destination.top + destination.height / 2),
-        scaleX: source.width / Math.max(1, destination.width),
-        scaleY: source.height / Math.max(1, destination.height),
-      };
-    };
+    gsap.set(highlights, { autoAlpha: 0 });
+    gsap.set([locator, pin], { autoAlpha: 0 });
+  }
+
+  function initOcShowcase() {
+    const sequence = document.querySelector(".oc-showcase-sequence");
+    const stage = document.querySelector(".oc-showcase-stage");
+    const track = document.querySelector(".oc-showcase-track");
+    const intro = document.querySelector(".oc-showcase-intro");
+    const connector = document.querySelector(".oc-showcase-connector");
+    const connectorPaths = [...document.querySelectorAll(".oc-showcase-connector path")];
+    const connectorOrnaments = [...document.querySelectorAll(".oc-showcase-connector > span")];
+    const artwork = document.querySelector(".oc-showcase-artwork");
+    const imageShell = document.querySelector(".oc-showcase-image-shell");
+    const image = imageShell?.querySelector("img");
+    const imageScan = document.querySelector(".oc-image-scan");
+    const atmosphere = [...document.querySelectorAll(".oc-showcase-atmosphere > span")];
+    const atlas = document.querySelector(".growth-continuum-atlas");
+    const atlasMapShell = document.querySelector(".continuum-atlas-map-shell");
+    const atlasCopy = document.querySelector(".continuum-atlas-copy");
+    const atlasHeading = document.querySelector(".continuum-atlas-heading");
+    if (!sequence || !stage || !track || !intro || !connector || !artwork || !imageShell || !image) return;
 
     const mm = gsap.matchMedia();
-    mm.add({ desktop: "(min-width: 861px)", mobile: "(max-width: 860px)", reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
+    mm.add({ motion: "(prefers-reduced-motion: no-preference)", reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
       const { reduce } = context.conditions;
-      gsap.set(front, { rotationY: 0, transformOrigin: "left center" });
-      gsap.set(back, { autoAlpha: 1 });
-      gsap.set(pageShadow, { autoAlpha: 0 });
-      gsap.set(atlas, { autoAlpha: 0 });
-      gsap.set([heading, atlasCopy], { autoAlpha: 0, y: 14 });
-      gsap.set(highlights, { autoAlpha: 0 });
-      gsap.set([locator, pin], { autoAlpha: 0 });
-      atlas.classList.remove("is-ready");
-
       if (reduce) {
-        gsap.set([world, copy, book, index], { autoAlpha: 0 });
-        gsap.set(atlas, { autoAlpha: 1 });
-        gsap.set([heading, atlasCopy], { autoAlpha: 1, y: 0 });
-        atlas.classList.add("is-ready");
+        gsap.set([intro, connector, artwork, imageShell], { autoAlpha: 1, x: 0, clipPath: "none" });
         return;
       }
 
+      connectorPaths.forEach((path) => {
+        const length = path.getTotalLength();
+        gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+      });
+      gsap.set(connectorOrnaments, { autoAlpha: 0, scale: .45, transformOrigin: "center" });
+      gsap.set(imageShell, { clipPath: "inset(0 100% 0 0)" });
+      gsap.set(image, { scale: 1.045, xPercent: -1.4, transformOrigin: "center" });
+      gsap.set(imageScan, { autoAlpha: 0, x: 0 });
+
+      if (atlas && atlasMapShell) {
+        gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: sequence,
+            start: "top bottom",
+            end: "top top",
+            scrub: .6,
+            invalidateOnRefresh: true,
+          },
+        })
+          .to(atlasMapShell, { xPercent: -9, scale: .96, autoAlpha: .28, duration: 1 }, 0)
+          .to([atlasHeading, atlasCopy].filter(Boolean), { xPercent: -18, autoAlpha: 0, duration: .62 }, 0)
+          .fromTo(stage, { autoAlpha: .25 }, { autoAlpha: 1, duration: 1, immediateRender: false }, 0);
+      }
+
+      const horizontalDistance = () => Math.max(0, track.scrollWidth - window.innerWidth);
       const timeline = gsap.timeline({
         defaults: { ease: "none" },
         scrollTrigger: {
-          trigger: section,
+          trigger: sequence,
           start: "top top",
           end: "bottom bottom",
-          scrub: .72,
+          scrub: .85,
           invalidateOnRefresh: true,
-          onUpdate(self) {
-            atlas.classList.toggle("is-ready", self.progress >= .78);
-            if (self.progress < .78 && activeRegion) setRegion();
-          },
         },
       });
 
       timeline
-        .addLabel("turnPage", 0)
-        .addLabel("mapPage", .28)
-        .addLabel("liftAtlas", .42)
-        .addLabel("atlasReady", .78)
-        .to(front, { rotationY: -176, duration: .28, ease: "power3.inOut" }, "turnPage")
-        .fromTo(pageShadow, { autoAlpha: 0, xPercent: 34 }, { autoAlpha: .58, xPercent: -26, duration: .14, ease: "power2.inOut" }, "turnPage")
-        .to(pageShadow, { autoAlpha: 0, duration: .14 }, "turnPage+=.14")
-        .to({}, { duration: .12 }, "mapPage")
-        .to([copy, world], { autoAlpha: 0, duration: .16, ease: "power2.in" }, "liftAtlas")
-        .to(index, { autoAlpha: 0, duration: .12 }, "liftAtlas")
-        .set(atlas, { autoAlpha: 1 }, "liftAtlas")
-        .set(mapShell, {
-          x: () => getMapOrigin().x,
-          y: () => getMapOrigin().y,
-          scaleX: () => getMapOrigin().scaleX,
-          scaleY: () => getMapOrigin().scaleY,
-          transformOrigin: "center",
-        }, "liftAtlas")
-        .to(book, { autoAlpha: 0, duration: .08 }, "liftAtlas+=.02")
-        .to(mapShell, { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: .3, ease: "power3.inOut" }, "liftAtlas")
-        .to(heading, { autoAlpha: 1, y: 0, duration: .14, ease: "power2.out" }, .68)
-        .to(atlasCopy, { autoAlpha: 1, y: 0, duration: .14, ease: "power2.out" }, .71)
-        .to({}, { duration: .22 }, "atlasReady");
+        .addLabel("title", 0)
+        .addLabel("trace", .16)
+        .addLabel("reveal", .46)
+        .to(track, { x: () => -horizontalDistance(), duration: 1 }, 0)
+        .fromTo(intro, { autoAlpha: .2, x: 60 }, { autoAlpha: 1, x: 0, duration: .2, ease: "power2.out", immediateRender: false }, "title")
+        .to(connectorPaths, { strokeDashoffset: 0, stagger: .045, duration: .34, ease: "power2.inOut" }, "trace")
+        .to(connectorOrnaments, { autoAlpha: .86, scale: 1, stagger: .025, duration: .18, ease: "power2.out" }, "trace+=.08")
+        .to(atmosphere, { rotation: (index) => index % 2 ? -24 : 18, xPercent: (index) => index % 2 ? -4 : 4, duration: 1 }, 0)
+        .to(imageShell, { clipPath: "inset(0 0% 0 0)", duration: .3, ease: "power2.inOut" }, "reveal")
+        .to(imageScan, { autoAlpha: .8, x: () => imageShell.clientWidth, duration: .3, ease: "power2.inOut" }, "reveal")
+        .to(image, { scale: 1, xPercent: 0, duration: .46, ease: "power2.out" }, "reveal")
+        .to(imageScan, { autoAlpha: 0, duration: .08 }, ">-.08")
+        .fromTo(artwork.querySelector("figcaption"), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .16, ease: "power2.out", immediateRender: false }, "reveal+=.2")
+        .to({}, { duration: .12 });
     });
   }
 
@@ -1574,7 +1637,8 @@
   initScrollStory(orbit);
   initGrowthHandoff(orbit);
   initAgentGrowthTransition();
-  initAtlasContinuum();
+  initAtlasInteraction();
+  initOcShowcase();
   window.addEventListener("load", () => {
     orbit?.render();
     ScrollTrigger.refresh();

@@ -198,11 +198,48 @@
             <figure class="growth-product-composition">
               <div class="growth-product-window">
                 <img class="growth-window-source" src="./assets/redesign-v2-art/product-shell-empty.png" alt="诺文项目界面，左侧为项目导航，右侧为空白工作区" />
-                <img class="growth-window-final" src="./assets/generated-storyboards/storyboard-04-agent-growth.png" alt="诺文 Growth 工作区，展示创作任务进度、文章与配图成果" />
+                <div class="growth-window-page growth-window-front">
+                  <img class="growth-window-final" src="./assets/generated-storyboards/storyboard-04-agent-growth.png" alt="诺文 Growth 工作区，展示创作任务进度、文章与配图成果" />
+                </div>
+                <div class="growth-window-page growth-window-atlas-page">
+                  <img class="atlas-product-page-image" src="./assets/redesign-v2-art/atlas-product-page.png" alt="幻想大陆地图产品页面，左侧为产品栏，右侧为完整地图" />
+                  <span class="atlas-product-map" aria-hidden="true"></span>
+                </div>
+                <span class="growth-page-shadow" aria-hidden="true"></span>
                 <span class="growth-window-glare" aria-hidden="true"></span>
                 <span class="growth-window-frame" aria-hidden="true"></span>
               </div>
             </figure>
+
+            <section class="growth-continuum-atlas" aria-label="可交互的幻想大陆地图">
+              <header class="continuum-atlas-heading">
+                <p>World atlas / Living geography</p>
+                <h2>世界图志</h2>
+              </header>
+
+              <div class="continuum-atlas-map-shell">
+                <div class="continuum-atlas-map">
+                  <div class="continuum-atlas-layers">
+                    <img class="continuum-atlas-image continuum-atlas-base" src="./assets/atlas-base-cutout.webp" alt="绘有山脉、森林、湖泊、河流和海岸的幻想大陆地图" width="1448" height="1086" />
+                    <span class="continuum-atlas-highlight" data-continuum-region="western-bay" aria-hidden="true"><img src="./assets/atlas-western-bay-layer.webp" alt="" /></span>
+                    <span class="continuum-atlas-highlight" data-continuum-region="central-ridge" aria-hidden="true"><img src="./assets/atlas-central-ridge-layer.webp" alt="" /></span>
+                    <span class="continuum-atlas-highlight" data-continuum-region="northern-forest" aria-hidden="true"><img src="./assets/atlas-northern-forest-layer.webp" alt="" /></span>
+                    <span class="continuum-atlas-highlight" data-continuum-region="northern-highlands" aria-hidden="true"><img src="./assets/atlas-northern-highlands-layer.webp" alt="" /></span>
+                    <span class="continuum-atlas-highlight" data-continuum-region="eastern-lakes" aria-hidden="true"><img src="./assets/atlas-eastern-lakes-layer.webp" alt="" /></span>
+                    <span class="continuum-atlas-highlight" data-continuum-region="southern-forest" aria-hidden="true"><img src="./assets/atlas-southern-forest-layer.webp" alt="" /></span>
+                    <span class="continuum-atlas-highlight" data-continuum-region="southern-coast" aria-hidden="true"><img src="./assets/atlas-southern-coast-layer.webp" alt="" /></span>
+                  </div>
+                  <svg class="continuum-atlas-hotspots" viewBox="0 0 1448 1086" role="group" aria-label="地图区域"></svg>
+                  <span class="continuum-atlas-locator" aria-hidden="true"><i></i><b></b></span>
+                  <span class="continuum-atlas-pin" aria-hidden="true"><i></i></span>
+                </div>
+              </div>
+
+              <div class="continuum-atlas-copy" aria-live="polite">
+                <span class="continuum-region-name">完整大陆</span>
+                <p class="continuum-region-description">每一处地理，都能成为故事的起点。</p>
+              </div>
+            </section>
           </div>
 
           <div class="agent-growth-source-frame">
@@ -240,72 +277,49 @@
         </div>
       </section>
 
-      <section class="atlas-continuum" id="atlas-continuum" aria-labelledby="continuum-atlas-title">
-        <div class="atlas-continuum-stage">
-          <div class="atlas-continuum-world" aria-hidden="true">
-            <img src="./assets/intro-ink-world.png" alt="" />
-            <span></span>
+      <section class="oc-showcase-sequence" id="oc-showcase" aria-labelledby="oc-showcase-title">
+        <div class="oc-showcase-stage">
+          <div class="oc-showcase-atmosphere" aria-hidden="true">
+            <span class="oc-atmosphere-ring oc-atmosphere-ring-a"></span>
+            <span class="oc-atmosphere-ring oc-atmosphere-ring-b"></span>
+            <span class="oc-atmosphere-cross"></span>
           </div>
 
-          <article class="atlas-continuum-copy">
-            <span aria-hidden="true">WORLD</span>
-            <p>构建世界</p>
-            <h2><i>世界</i><i>从此构建</i></h2>
-            <small>地理、国家、组织与规则，在世界档案中彼此关联。</small>
-          </article>
-
-          <div class="atlas-book-shell">
-            <div class="atlas-book-page atlas-book-front">
-              <img src="./assets/generated-storyboards/storyboard-04-agent-growth.png" alt="诺文 Growth 工作区，展示文章与配图成果" />
-            </div>
-
-            <div class="atlas-book-page atlas-book-back">
-              <aside class="atlas-product-sidebar" aria-hidden="true">
-                <header><i></i><b></b></header>
-                <div class="atlas-sidebar-index"><i></i><i></i></div>
-                <div class="atlas-sidebar-title"><i></i><i></i></div>
-                <div class="atlas-sidebar-copy"><i></i><i></i><i></i></div>
-                <div class="atlas-sidebar-rule"><i></i><i></i></div>
-                <footer><i></i><i></i><i></i><i></i></footer>
-              </aside>
-              <div class="atlas-product-map"><img src="./assets/atlas-base.webp" alt="幻想大陆地图产品页面" /></div>
-            </div>
-            <span class="atlas-page-shadow" aria-hidden="true"></span>
-          </div>
-
-          <section class="continuum-atlas" aria-label="可交互的幻想大陆地图">
-            <header class="continuum-atlas-heading">
-              <p>World atlas / Living geography</p>
-              <h2 id="continuum-atlas-title">世界图志</h2>
+          <div class="oc-showcase-track">
+            <header class="oc-showcase-intro">
+              <p><span>Character archive</span><i></i><b>07</b></p>
+              <h2 id="oc-showcase-title"><span>OC</span><span>展示</span></h2>
+              <small>让角色从设定中走出来，成为可持续生长的创作坐标。</small>
             </header>
 
-            <div class="continuum-atlas-map-shell">
-              <div class="continuum-atlas-map">
-                <div class="continuum-atlas-layers">
-                  <img class="continuum-atlas-image continuum-atlas-base" src="./assets/atlas-base-cutout.webp" alt="绘有山脉、森林、湖泊、河流和海岸的幻想大陆地图" width="1448" height="1086" />
-                  <span class="continuum-atlas-highlight" data-continuum-region="western-bay" aria-hidden="true"><img src="./assets/atlas-western-bay-layer.webp" alt="" /></span>
-                  <span class="continuum-atlas-highlight" data-continuum-region="central-ridge" aria-hidden="true"><img src="./assets/atlas-central-ridge-layer.webp" alt="" /></span>
-                  <span class="continuum-atlas-highlight" data-continuum-region="northern-forest" aria-hidden="true"><img src="./assets/atlas-northern-forest-layer.webp" alt="" /></span>
-                  <span class="continuum-atlas-highlight" data-continuum-region="northern-highlands" aria-hidden="true"><img src="./assets/atlas-northern-highlands-layer.webp" alt="" /></span>
-                  <span class="continuum-atlas-highlight" data-continuum-region="eastern-lakes" aria-hidden="true"><img src="./assets/atlas-eastern-lakes-layer.webp" alt="" /></span>
-                  <span class="continuum-atlas-highlight" data-continuum-region="southern-forest" aria-hidden="true"><img src="./assets/atlas-southern-forest-layer.webp" alt="" /></span>
-                  <span class="continuum-atlas-highlight" data-continuum-region="southern-coast" aria-hidden="true"><img src="./assets/atlas-southern-coast-layer.webp" alt="" /></span>
-                </div>
-                <svg class="continuum-atlas-hotspots" viewBox="0 0 1448 1086" role="group" aria-label="地图区域"></svg>
-                <span class="continuum-atlas-locator" aria-hidden="true"><i></i><b></b></span>
-                <span class="continuum-atlas-pin" aria-hidden="true"><i></i></span>
+            <div class="oc-showcase-connector" aria-hidden="true">
+              <svg viewBox="0 0 900 360" preserveAspectRatio="none">
+                <path class="oc-connector-path" d="M 8 178 C 152 178, 176 76, 328 76 S 522 260, 680 260 S 784 178, 892 178" />
+                <path class="oc-connector-echo" d="M 92 232 C 232 232, 252 136, 390 136 S 566 302, 736 302" />
+                <circle cx="8" cy="178" r="4" />
+                <circle cx="328" cy="76" r="3" />
+                <circle cx="680" cy="260" r="3" />
+                <circle cx="892" cy="178" r="5" />
+              </svg>
+              <span class="oc-connector-star oc-connector-star-a"></span>
+              <span class="oc-connector-star oc-connector-star-b"></span>
+              <span class="oc-connector-diamond"></span>
+              <span class="oc-connector-coordinate">CHAR / 01</span>
+            </div>
+
+            <figure class="oc-showcase-artwork">
+              <div class="oc-showcase-image-shell">
+                <img src="./assets/generated-storyboards/storyboard-07-character-direction.png" alt="OC 角色设定展示，包含角色全身设计、比例关系、服饰细节和世界地图线索" width="1672" height="941" />
+                <span class="oc-image-scan" aria-hidden="true"></span>
               </div>
-            </div>
+              <figcaption><span>Character direction</span><b>角色、服饰、尺度与世界关系</b><i>07 / OC</i></figcaption>
+            </figure>
+          </div>
 
-            <div class="continuum-atlas-copy" aria-live="polite">
-              <span class="continuum-region-name">完整大陆</span>
-              <p class="continuum-region-description">每一处地理，都能成为故事的起点。</p>
-            </div>
-          </section>
-
-          <p class="atlas-continuum-index" aria-hidden="true"><span>05</span><i></i><b>ATLAS</b></p>
+          <p class="oc-showcase-index" aria-hidden="true"><span>OC</span><i></i><b>07</b></p>
         </div>
       </section>
+
     </main>
 
     <script>document.documentElement.classList.add("has-motion-runtime");</script>
