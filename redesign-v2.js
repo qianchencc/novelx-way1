@@ -484,7 +484,7 @@
           end,
           control1: { x: start.x + horizontal * (desktop ? 0.32 : 0.25), y: start.y + (desktop ? 120 : 88) },
           control2: { x: end.x - horizontal * (desktop ? 0.2 : 0.16), y: end.y - (desktop ? 150 : 92) },
-          scale: targetRect.width / Math.max(1, originRect.width),
+          scale: targetRect.width * 1.68 / Math.max(1, originRect.width),
         };
       };
       let flightGeometry = getFlightGeometry();

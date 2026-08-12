@@ -446,7 +446,7 @@ button:focus-visible,
 .library-title-lockup {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
 }
 
 .library-logo-target {
@@ -465,12 +465,17 @@ button:focus-visible,
 }
 
 .library-intro h2 {
+  width: clamp(180px, 15vw, 220px);
+  aspect-ratio: 1420 / 1108;
   margin: 0;
-  font-family: "Songti SC", STSong, serif;
-  font-size: clamp(64px, 6vw, 92px);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: 0;
+  overflow: hidden;
+}
+
+.library-intro h2 img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .library-intro blockquote {
@@ -833,7 +838,7 @@ button:focus-visible,
   }
 
   .library-intro h2 {
-    font-size: 60px;
+    width: 174px;
   }
 
   .library-logo-target {
