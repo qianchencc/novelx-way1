@@ -895,6 +895,143 @@
         warm: starIndex % 7 !== 0,
       };
     });
+    const ornamentCatalog = [
+      { type: "star-ring", radius: .18, angle: -.82, speed: .76, size: 8.2, reveal: .18 },
+      { type: "small-star", radius: .29, angle: 2.56, speed: .91, size: 5.2, reveal: .12 },
+      { type: "hollow-ring", radius: .37, angle: -.12, speed: .7, size: 6.6, reveal: .2 },
+      { type: "diamond", radius: .45, angle: 1.72, speed: .84, size: 5.1, reveal: .24 },
+      { type: "double-node", radius: .53, angle: -2.38, speed: .68, size: 4.1, reveal: .08 },
+      { type: "tangent-tick", radius: .61, angle: .62, speed: .8, size: 11, reveal: .22 },
+      { type: "dust-pair", radius: .69, angle: 2.92, speed: .72, size: 3.8, reveal: .1 },
+      { type: "halo-node", radius: .77, angle: -.95, speed: .9, size: 5.4, reveal: .28 },
+      { type: "crosshair", radius: .24, angle: -2.82, speed: .73, size: 7.4, reveal: .3 },
+      { type: "arc-bracket", radius: .34, angle: .94, speed: .86, size: 8.2, reveal: .34 },
+      { type: "triple-dust", radius: .42, angle: -1.68, speed: .78, size: 3.5, reveal: .14 },
+      { type: "double-ring", radius: .5, angle: 2.18, speed: .67, size: 5.8, reveal: .38 },
+      { type: "comet-node", radius: .58, angle: -.42, speed: .93, size: 5.2, reveal: .16 },
+      { type: "small-star", radius: .66, angle: 1.34, speed: .82, size: 4.4, reveal: .26 },
+      { type: "diamond", radius: .74, angle: -2.12, speed: .75, size: 4.7, reveal: .32 },
+      { type: "hollow-ring", radius: .82, angle: .18, speed: .88, size: 5.2, reveal: .4 },
+      { type: "tangent-tick", radius: .27, angle: 2.08, speed: .69, size: 8.6, reveal: .46 },
+      { type: "halo-node", radius: .47, angle: -3.02, speed: .92, size: 4.6, reveal: .42 },
+      { type: "star-ring", radius: .63, angle: 2.74, speed: .71, size: 6.8, reveal: .48 },
+      { type: "arc-bracket", radius: .79, angle: 1.92, speed: .83, size: 7.2, reveal: .5 },
+    ];
+
+    const drawStartrailOrnament = (ornament, x, y, tangent, color, alpha, progress) => {
+      if (!ornament || progress < ornament.reveal) return;
+      const reveal = smoothstep(ornament.reveal, Math.min(1, ornament.reveal + .16), progress);
+      const size = ornament.size * (.6 + reveal * .4);
+      startrailContext.save();
+      startrailContext.translate(x, y);
+      startrailContext.rotate(tangent);
+      startrailContext.globalAlpha = reveal;
+      startrailContext.strokeStyle = `rgba(${color},${Math.min(.78, alpha * 1.5)})`;
+      startrailContext.fillStyle = `rgba(${color},${Math.min(.72, alpha * 1.35)})`;
+      startrailContext.lineWidth = .8;
+
+      const fourPointStar = (starSize) => {
+        startrailContext.beginPath();
+        startrailContext.moveTo(0, -starSize);
+        startrailContext.lineTo(starSize * .22, -starSize * .22);
+        startrailContext.lineTo(starSize, 0);
+        startrailContext.lineTo(starSize * .22, starSize * .22);
+        startrailContext.lineTo(0, starSize);
+        startrailContext.lineTo(-starSize * .22, starSize * .22);
+        startrailContext.lineTo(-starSize, 0);
+        startrailContext.lineTo(-starSize * .22, -starSize * .22);
+        startrailContext.closePath();
+      };
+
+      if (ornament.type === "star-ring") {
+        fourPointStar(size);
+        startrailContext.fill();
+        startrailContext.setLineDash([1.4, 3.2]);
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size * 2.15, 0, Math.PI * 2);
+        startrailContext.stroke();
+      } else if (ornament.type === "small-star") {
+        fourPointStar(size);
+        startrailContext.fill();
+      } else if (ornament.type === "hollow-ring") {
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size, 0, Math.PI * 2);
+        startrailContext.fillStyle = `rgba(238,225,201,${alpha * .24})`;
+        startrailContext.fill();
+        startrailContext.stroke();
+      } else if (ornament.type === "diamond") {
+        startrailContext.rotate(Math.PI / 4);
+        startrailContext.fillRect(-size * .55, -size * .55, size * 1.1, size * 1.1);
+      } else if (ornament.type === "double-node") {
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size, 0, Math.PI * 2);
+        startrailContext.fill();
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size * 1.8, 0, Math.PI * 2);
+        startrailContext.stroke();
+      } else if (ornament.type === "tangent-tick") {
+        startrailContext.beginPath();
+        startrailContext.moveTo(-size, 0);
+        startrailContext.lineTo(size, 0);
+        startrailContext.stroke();
+        startrailContext.beginPath();
+        startrailContext.arc(size * .62, 0, 1.2, 0, Math.PI * 2);
+        startrailContext.fill();
+      } else if (ornament.type === "dust-pair") {
+        startrailContext.beginPath();
+        startrailContext.arc(-size * 1.4, 0, size * .52, 0, Math.PI * 2);
+        startrailContext.arc(size * 1.2, size * .45, size * .3, 0, Math.PI * 2);
+        startrailContext.fill();
+      } else if (ornament.type === "halo-node") {
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size * .46, 0, Math.PI * 2);
+        startrailContext.fill();
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size * 2.25, -.55, 1.05);
+        startrailContext.stroke();
+      } else if (ornament.type === "crosshair") {
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size * .72, 0, Math.PI * 2);
+        startrailContext.stroke();
+        startrailContext.beginPath();
+        startrailContext.moveTo(-size * 1.35, 0);
+        startrailContext.lineTo(-size * .55, 0);
+        startrailContext.moveTo(size * .55, 0);
+        startrailContext.lineTo(size * 1.35, 0);
+        startrailContext.moveTo(0, -size * 1.35);
+        startrailContext.lineTo(0, -size * .55);
+        startrailContext.moveTo(0, size * .55);
+        startrailContext.lineTo(0, size * 1.35);
+        startrailContext.stroke();
+      } else if (ornament.type === "arc-bracket") {
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size, -.95, .95);
+        startrailContext.stroke();
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size * .25, 0, Math.PI * 2);
+        startrailContext.fill();
+      } else if (ornament.type === "triple-dust") {
+        [[-1.5, 0, .42], [0, -.55, .72], [1.35, .28, .3]].forEach(([dx, dy, scale]) => {
+          startrailContext.beginPath();
+          startrailContext.arc(dx * size, dy * size, size * scale, 0, Math.PI * 2);
+          startrailContext.fill();
+        });
+      } else if (ornament.type === "double-ring") {
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size * .72, 0, Math.PI * 2);
+        startrailContext.arc(0, 0, size * 1.42, 0, Math.PI * 2);
+        startrailContext.stroke();
+      } else if (ornament.type === "comet-node") {
+        startrailContext.beginPath();
+        startrailContext.arc(0, 0, size * .42, 0, Math.PI * 2);
+        startrailContext.fill();
+        startrailContext.beginPath();
+        startrailContext.moveTo(-size * 2.4, 0);
+        startrailContext.lineTo(-size * .7, 0);
+        startrailContext.stroke();
+      }
+      startrailContext.restore();
+    };
 
     function renderStartrails() {
       if (!startrails || !startrailContext) return;
@@ -908,7 +1045,7 @@
       const arcGrowth = .025 + progress * 1.72;
       startrailContext.lineCap = "round";
 
-      starCatalog.forEach((star) => {
+      starCatalog.forEach((star, starIndex) => {
         const radius = star.radius * maxRadius;
         const head = star.angle + progress * 1.58 * star.speed;
         const arcLength = arcGrowth * (.72 + star.speed * .36);
@@ -924,49 +1061,27 @@
         gradient.addColorStop(.64, `rgba(${color},${star.alpha * .42})`);
         gradient.addColorStop(1, `rgba(${color},${star.alpha})`);
         startrailContext.beginPath();
-        startrailContext.arc(centerX, centerY, radius, start, star.angle);
+        startrailContext.arc(centerX, centerY, radius, start, head);
         startrailContext.strokeStyle = gradient;
         startrailContext.lineWidth = star.width;
         startrailContext.stroke();
-        if (star.width <= .8) return;
         const headX = centerX + Math.cos(head) * radius;
         const headY = centerY + Math.sin(head) * radius;
-        startrailContext.beginPath();
-        startrailContext.arc(headX, headY, star.width * .85, 0, Math.PI * 2);
-        startrailContext.fillStyle = `rgba(${color},${Math.min(.72, star.alpha * 1.35)})`;
-        startrailContext.fill();
-
-        // Sparse ornaments echo the original page's stars, rings and diamonds.
-        startrailContext.save();
-        startrailContext.translate(headX, headY);
-        startrailContext.strokeStyle = `rgba(${color},${Math.min(.72, star.alpha * 1.45)})`;
-        startrailContext.fillStyle = `rgba(${color},${Math.min(.68, star.alpha * 1.3)})`;
-        startrailContext.lineWidth = .75;
-        if (star.width > 1.3) {
-          const size = 4.2;
+        if (star.width > .8) {
           startrailContext.beginPath();
-          startrailContext.moveTo(0, -size);
-          startrailContext.lineTo(1.1, -1.1);
-          startrailContext.lineTo(size, 0);
-          startrailContext.lineTo(1.1, 1.1);
-          startrailContext.lineTo(0, size);
-          startrailContext.lineTo(-1.1, 1.1);
-          startrailContext.lineTo(-size, 0);
-          startrailContext.lineTo(-1.1, -1.1);
-          startrailContext.closePath();
+          startrailContext.arc(headX, headY, star.width * .75, 0, Math.PI * 2);
+          startrailContext.fillStyle = `rgba(${color},${Math.min(.72, star.alpha * 1.35)})`;
           startrailContext.fill();
-          startrailContext.beginPath();
-          startrailContext.arc(0, 0, size * 1.9, 0, Math.PI * 2);
-          startrailContext.stroke();
-        } else if (Math.round(star.radius * 1000) % 4 === 0) {
-          startrailContext.beginPath();
-          startrailContext.arc(0, 0, 3.6, 0, Math.PI * 2);
-          startrailContext.stroke();
-        } else if (Math.round(star.radius * 1000) % 5 === 0) {
-          startrailContext.rotate(head + Math.PI / 4);
-          startrailContext.fillRect(-2, -2, 4, 4);
         }
-        startrailContext.restore();
+      });
+
+      ornamentCatalog.forEach((ornament, ornamentIndex) => {
+        const radius = ornament.radius * maxRadius;
+        const head = ornament.angle + progress * 1.58 * ornament.speed;
+        const x = centerX + Math.cos(head) * radius;
+        const y = centerY + Math.sin(head) * radius;
+        const color = ornamentIndex % 6 === 4 ? "119,132,143" : "181,123,31";
+        drawStartrailOrnament(ornament, x, y, head + Math.PI / 2, color, .62, progress);
       });
     }
 
@@ -1222,6 +1337,179 @@
     });
   }
 
+  function initAtlasContinuum() {
+    const section = document.querySelector(".atlas-continuum");
+    const stage = document.querySelector(".atlas-continuum-stage");
+    const world = document.querySelector(".atlas-continuum-world");
+    const copy = document.querySelector(".atlas-continuum-copy");
+    const book = document.querySelector(".atlas-book-shell");
+    const front = document.querySelector(".atlas-book-front");
+    const back = document.querySelector(".atlas-book-back");
+    const productMap = document.querySelector(".atlas-product-map");
+    const pageShadow = document.querySelector(".atlas-page-shadow");
+    const atlas = document.querySelector(".continuum-atlas");
+    const heading = document.querySelector(".continuum-atlas-heading");
+    const mapShell = document.querySelector(".continuum-atlas-map-shell");
+    const map = document.querySelector(".continuum-atlas-map");
+    const hotspotSvg = document.querySelector(".continuum-atlas-hotspots");
+    const highlights = [...document.querySelectorAll(".continuum-atlas-highlight")];
+    const locator = document.querySelector(".continuum-atlas-locator");
+    const pin = document.querySelector(".continuum-atlas-pin");
+    const regionName = document.querySelector(".continuum-region-name");
+    const regionDescription = document.querySelector(".continuum-region-description");
+    const atlasCopy = document.querySelector(".continuum-atlas-copy");
+    const index = document.querySelector(".atlas-continuum-index");
+    if (!section || !stage || !world || !copy || !book || !front || !back || !productMap || !atlas || !mapShell || !map || !hotspotSvg) return;
+
+    const metadata = {
+      "western-bay": ["西南海湾", "海湾、孤岛与通向大陆腹地的水路。"],
+      "central-ridge": ["中央山脉", "群峰横贯大陆，河流从山谷向四方延伸。"],
+      "northern-forest": ["北部森林", "密林沿河谷生长，连接山地与湖区。"],
+      "northern-highlands": ["北境高地", "高原与群峰构成大陆最北端的天然屏障。"],
+      "eastern-lakes": ["东北湖区", "湖泊与支流交织，形成独立的水域网络。"],
+      "southern-forest": ["东南森林", "南境林海覆盖丘陵，并延伸至海岸。"],
+      "southern-coast": ["南部海岸与群岛", "曲折海岸与群岛展开通往远方的航线。"],
+    };
+
+    if (window.NOVELX_ATLAS_HOTSPOTS) {
+      const namespace = "http://www.w3.org/2000/svg";
+      Object.entries(window.NOVELX_ATLAS_HOTSPOTS).forEach(([region, pathData]) => {
+        if (!metadata[region] || !pathData) return;
+        const path = document.createElementNS(namespace, "path");
+        path.classList.add("continuum-atlas-hotspot");
+        path.dataset.region = region;
+        path.setAttribute("d", pathData);
+        path.setAttribute("tabindex", "0");
+        path.setAttribute("aria-label", metadata[region][0]);
+        hotspotSvg.append(path);
+      });
+    }
+
+    const hotspots = [...document.querySelectorAll(".continuum-atlas-hotspot")];
+    let activeRegion = "";
+    let resetCall = null;
+
+    const setRegion = (region = "") => {
+      if (region === activeRegion || !regionName || !regionDescription) return;
+      resetCall?.kill();
+      resetCall = null;
+      activeRegion = region;
+      const hotspot = hotspots.find((item) => item.dataset.region === region);
+      const target = highlights.find((item) => item.dataset.continuumRegion === region);
+      gsap.to(highlights.filter((item) => item !== target), { autoAlpha: 0, duration: reduceMotion.matches ? 0 : .18, overwrite: "auto" });
+      if (target) gsap.to(target, { autoAlpha: 1, duration: reduceMotion.matches ? 0 : .3, ease: "power2.out", overwrite: "auto" });
+      const content = metadata[region] || ["完整大陆", "每一处地理，都能成为故事的起点。"];
+      regionName.textContent = content[0];
+      regionDescription.textContent = content[1];
+      gsap.fromTo([regionName, regionDescription], { autoAlpha: .25, y: 6 }, { autoAlpha: 1, y: 0, duration: reduceMotion.matches ? 0 : .28, stagger: .035, overwrite: "auto" });
+      gsap.to(map, { scale: region ? 1.008 : 1, duration: reduceMotion.matches ? 0 : .5, ease: "power2.out", overwrite: "auto" });
+      if (pin && hotspot) {
+        const bounds = hotspot.getBBox();
+        gsap.to(pin, {
+          autoAlpha: 1,
+          x: ((bounds.x + bounds.width / 2) / 1448) * map.clientWidth,
+          y: ((bounds.y + bounds.height / 2) / 1086) * map.clientHeight,
+          duration: reduceMotion.matches ? 0 : .28,
+          ease: "power3.out",
+          overwrite: "auto",
+        });
+      } else if (pin) {
+        gsap.to(pin, { autoAlpha: 0, duration: .16, overwrite: "auto" });
+      }
+    };
+
+    hotspots.forEach((hotspot) => {
+      const activate = () => setRegion(hotspot.dataset.region || "");
+      hotspot.addEventListener("pointerenter", activate);
+      hotspot.addEventListener("focus", activate);
+    });
+    map.addEventListener("pointerleave", () => {
+      if (!activeRegion) return;
+      resetCall?.kill();
+      resetCall = gsap.delayedCall(.14, () => setRegion());
+      gsap.to(locator, { autoAlpha: 0, duration: .18, overwrite: "auto" });
+    });
+    map.addEventListener("pointermove", (event) => {
+      resetCall?.kill();
+      resetCall = null;
+      if (!atlas.classList.contains("is-ready") || !locator) return;
+      const bounds = map.getBoundingClientRect();
+      gsap.set(locator, { autoAlpha: .58, x: event.clientX - bounds.left, y: event.clientY - bounds.top });
+    });
+
+    const getMapOrigin = () => {
+      const source = productMap.getBoundingClientRect();
+      const destination = mapShell.getBoundingClientRect();
+      return {
+        x: source.left + source.width / 2 - (destination.left + destination.width / 2),
+        y: source.top + source.height / 2 - (destination.top + destination.height / 2),
+        scaleX: source.width / Math.max(1, destination.width),
+        scaleY: source.height / Math.max(1, destination.height),
+      };
+    };
+
+    const mm = gsap.matchMedia();
+    mm.add({ desktop: "(min-width: 861px)", mobile: "(max-width: 860px)", reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
+      const { reduce } = context.conditions;
+      gsap.set(front, { rotationY: 0, transformOrigin: "left center" });
+      gsap.set(back, { autoAlpha: 1 });
+      gsap.set(pageShadow, { autoAlpha: 0 });
+      gsap.set(atlas, { autoAlpha: 0 });
+      gsap.set([heading, atlasCopy], { autoAlpha: 0, y: 14 });
+      gsap.set(highlights, { autoAlpha: 0 });
+      gsap.set([locator, pin], { autoAlpha: 0 });
+      atlas.classList.remove("is-ready");
+
+      if (reduce) {
+        gsap.set([world, copy, book, index], { autoAlpha: 0 });
+        gsap.set(atlas, { autoAlpha: 1 });
+        gsap.set([heading, atlasCopy], { autoAlpha: 1, y: 0 });
+        atlas.classList.add("is-ready");
+        return;
+      }
+
+      const timeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: .72,
+          invalidateOnRefresh: true,
+          onUpdate(self) {
+            atlas.classList.toggle("is-ready", self.progress >= .78);
+            if (self.progress < .78 && activeRegion) setRegion();
+          },
+        },
+      });
+
+      timeline
+        .addLabel("turnPage", 0)
+        .addLabel("mapPage", .28)
+        .addLabel("liftAtlas", .42)
+        .addLabel("atlasReady", .78)
+        .to(front, { rotationY: -176, duration: .28, ease: "power3.inOut" }, "turnPage")
+        .fromTo(pageShadow, { autoAlpha: 0, xPercent: 34 }, { autoAlpha: .58, xPercent: -26, duration: .14, ease: "power2.inOut" }, "turnPage")
+        .to(pageShadow, { autoAlpha: 0, duration: .14 }, "turnPage+=.14")
+        .to({}, { duration: .12 }, "mapPage")
+        .to([copy, world], { autoAlpha: 0, duration: .16, ease: "power2.in" }, "liftAtlas")
+        .to(index, { autoAlpha: 0, duration: .12 }, "liftAtlas")
+        .set(atlas, { autoAlpha: 1 }, "liftAtlas")
+        .set(mapShell, {
+          x: () => getMapOrigin().x,
+          y: () => getMapOrigin().y,
+          scaleX: () => getMapOrigin().scaleX,
+          scaleY: () => getMapOrigin().scaleY,
+          transformOrigin: "center",
+        }, "liftAtlas")
+        .to(book, { autoAlpha: 0, duration: .08 }, "liftAtlas+=.02")
+        .to(mapShell, { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: .3, ease: "power3.inOut" }, "liftAtlas")
+        .to(heading, { autoAlpha: 1, y: 0, duration: .14, ease: "power2.out" }, .68)
+        .to(atlasCopy, { autoAlpha: 1, y: 0, duration: .14, ease: "power2.out" }, .71)
+        .to({}, { duration: .22 }, "atlasReady");
+    });
+  }
+
   function initOpeningMotion() {
     const journeyCue = document.querySelector(".journey-cue");
     const journeyLine = document.querySelector(".journey-line");
@@ -1286,6 +1574,7 @@
   initScrollStory(orbit);
   initGrowthHandoff(orbit);
   initAgentGrowthTransition();
+  initAtlasContinuum();
   window.addEventListener("load", () => {
     orbit?.render();
     ScrollTrigger.refresh();
