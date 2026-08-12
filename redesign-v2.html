@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#eee9de" />
+    <meta
+      name="description"
+      content="诺文，把一条好视频生长为世界观、角色、故事与图像。"
+    />
+    <title>诺文 | 新版展示分镜</title>
+    <link rel="icon" type="image/png" href="./assets/novelx-favicon.png" />
+    <link rel="preload" href="./assets/generated-storyboards/storyboard-01-heartbeat.png" as="image" />
+    <link rel="preload" href="./assets/redesign-v2-art/novelx-logo-transparent.png" as="image" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./redesign-v2.css" />
+  </head>
+  <body>
+    <div class="page-progress" aria-hidden="true"><span></span></div>
+    <span class="brand-emblem shared-brand" id="shared-brand" aria-hidden="true">
+      <span class="flight-bird-body" id="flight-bird-body"></span>
+      <span class="flight-bird-wing" id="flight-bird-wing"></span>
+      <img class="flight-bird-fallback" src="./assets/redesign-v2-art/novelx-bird-wing.svg" alt="" />
+    </span>
+
+    <main>
+      <section class="chapter opening" id="opening" aria-labelledby="opening-title">
+        <img
+          class="scene-image opening-image"
+          src="./assets/generated-storyboards/storyboard-01-heartbeat.png"
+          alt="阳光照进安静的纸面创作空间，木桌等待一个新世界开始"
+        />
+        <div class="opening-shade" aria-hidden="true"></div>
+        <svg
+          class="hero-orbit"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="xMidYMid slice"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="orbit-gradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#9b7e53" stop-opacity="0.18" />
+              <stop offset="0.44" stop-color="#c4a46f" stop-opacity="0.48" />
+              <stop offset="0.76" stop-color="#ab8c5c" stop-opacity="0.34" />
+              <stop offset="1" stop-color="#d8bd89" stop-opacity="0.14" />
+            </linearGradient>
+            <filter id="orbit-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="8" />
+            </filter>
+            <mask id="orbit-reveal-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="900">
+              <path class="orbit-reveal" d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536" />
+            </mask>
+          </defs>
+          <g class="orbit-stroke-layers" mask="url(#orbit-reveal-mask)" transform="translate(42 0)">
+            <path class="orbit-haze" d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536" />
+            <path class="orbit-main" d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536" />
+            <path class="orbit-brush orbit-brush-soft" pathLength="100" d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536" />
+            <path class="orbit-brush orbit-brush-core" pathLength="100" d="M 742 278 C 790 214 834 164 900 160 C 963 156 994 198 995 270 C 997 390 953 478 862 530 C 803 564 738 569 682 536" />
+          </g>
+          <g class="orbit-decor" transform="translate(42 0)">
+            <g class="orbit-star orbit-star-large" transform="translate(855 174)"><path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z" /><circle r="13" /></g>
+            <g class="orbit-star orbit-star-small" transform="translate(948 185)"><path d="M 0 -3.5 L 0.9 -0.9 L 3.5 0 L 0.9 0.9 L 0 3.5 L -0.9 0.9 L -3.5 0 L -0.9 -0.9 Z" /></g>
+            <circle class="orbit-node" cx="880" cy="519" r="2.4" /><circle class="orbit-node-small" cx="958" cy="463" r="1.5" /><circle class="orbit-ring" cx="994" cy="404" r="3.2" /><circle class="orbit-dust" cx="992" cy="330" r="1.25" /><circle class="orbit-dust" cx="979" cy="242" r="0.9" /><circle class="orbit-dust" cx="816" cy="549" r="1.05" /><path class="orbit-diamond" d="M 767 542 L 770 546 L 767 550 L 764 546 Z" />
+          </g>
+        </svg>
+        <div class="opening-brand" aria-label="NovelX 诺文">
+          <span class="opening-project-logo" aria-hidden="true">
+            <img src="./assets/redesign-v2-art/novelx-logo-transparent.png" alt="" />
+          </span>
+        </div>
+        <div class="opening-copy">
+          <h1 id="opening-title">
+            <span class="title-line">让一条好视频，</span>
+            <span class="title-line title-line-second">长成你的 <i class="hero-oc" tabindex="0" role="button" aria-label="OC，悬停探索原创角色与原创世界"><span class="oc-default">OC</span><span class="oc-expanded" aria-hidden="true"><span class="oc-prefix">原创</span><span class="oc-roll"><span class="oc-roll-track"><span>角色</span><span>世界</span></span></span></span><span class="oc-glitch oc-glitch-a" aria-hidden="true">OC</span><span class="oc-glitch oc-glitch-b" aria-hidden="true">OC</span></i><b>。</b></span>
+          </h1>
+          <p class="opening-note">从视频到世界观、角色、故事与图像</p>
+        </div>
+        <a class="journey-cue" href="#art-library" aria-label="查看视频如何生长为一个世界">
+          <span class="journey-label">看它生长</span>
+          <span class="journey-rail" aria-hidden="true"><span class="journey-line"></span><span class="journey-drop"></span><span class="journey-chevron"><span></span></span></span>
+          <span class="journey-ornament journey-spark journey-spark-one" aria-hidden="true"></span><span class="journey-ornament journey-spark journey-spark-two" aria-hidden="true"></span><span class="journey-ornament journey-accent" aria-hidden="true"></span>
+        </a>
+        <span class="opening-index" aria-hidden="true">NX · 001</span>
+      </section>
+
+      <section class="library-sequence" id="art-library" aria-labelledby="library-title">
+        <div class="library-stage">
+          <aside class="product-sidebar" aria-label="诺文项目导航">
+            <header class="sidebar-brand">
+              <span class="sidebar-mark-placeholder" aria-hidden="true"><img src="./assets/redesign-v2-art/novelx-bird-wing.svg" alt="" /></span>
+              <strong>诺文</strong>
+              <span class="sidebar-collapse" aria-hidden="true" title="收起项目导航">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M15 9l-3 3 3 3"/></svg>
+              </span>
+            </header>
+
+            <nav class="library-navigation" aria-label="创作资料库">
+              <span class="is-active"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="6.5" r="1"/><circle cx="17.5" cy="10.5" r="1"/><circle cx="8.5" cy="7.5" r="1"/><circle cx="6.5" cy="12.5" r="1"/><path d="M12 2a10 10 0 0 0 0 20 2 2 0 0 0 2-2v-1a2 2 0 0 1 2-2h2a4 4 0 0 0 4-4c0-6.1-4.5-11-10-11z"/></svg><span>艺术库</span></span>
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M8.8 14.5A7 7 0 1 1 15.2 14.5c-.8.6-1.2 1.4-1.2 2.5h-4c0-1.1-.4-1.9-1.2-2.5z"/></svg><span>灵感库</span></span>
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5zM4 6.5v13M9 4v13"/></svg><span>传承库</span></span>
+            </nav>
+
+            <section class="sidebar-group">
+              <div class="sidebar-group-heading"><span>置顶</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div>
+              <p>暂无置顶</p>
+            </section>
+
+            <section class="sidebar-group sidebar-projects">
+              <header>
+                <span class="sidebar-project-label">项目<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+                <span class="sidebar-actions" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/></svg>
+                  <svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v10H3zM3 7V5h7l2 2"/></svg>
+                </span>
+              </header>
+              <div class="sidebar-project-list">
+                <div class="sidebar-project-row is-open"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h6l2 2h10l-2 10H4zM3 7V5h7l2 2"/></svg><strong>OC</strong><svg class="row-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div>
+                <div class="sidebar-session is-active">这是我很喜欢的两张图，我...</div>
+                <div class="sidebar-project-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3zM3 7V5h7l2 2"/></svg><span>战锤40k</span><svg class="row-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div>
+                <div class="sidebar-project-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3zM3 7V5h7l2 2"/></svg><span>rain_world</span><svg class="row-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div>
+                <div class="sidebar-project-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3zM3 7V5h7l2 2"/></svg><span>大循环世界</span><svg class="row-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div>
+                <div class="sidebar-project-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3zM3 7V5h7l2 2"/></svg><span>现代神仙</span><svg class="row-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div>
+                <div class="sidebar-project-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3zM3 7V5h7l2 2"/></svg><span>灰冠诸境</span><svg class="row-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></div>
+              </div>
+            </section>
+
+            <footer>
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg><span>刷新项目</span></span>
+              <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6 1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1z"/></svg><span>设置</span></span>
+            </footer>
+          </aside>
+
+          <div class="library-main">
+            <section class="library-intro">
+              <p class="library-eyebrow">The poetics of sight</p>
+              <div class="library-title-lockup">
+                <span class="library-logo-target" aria-hidden="true">
+                </span>
+                <h2 id="library-title">诺文</h2>
+              </div>
+              <blockquote>“美即是真，真即是美。这就是你在世间所知的一切，也是你需要知道的一切。”</blockquote>
+              <cite>John Keats, Ode on a Grecian Urn</cite>
+              <p class="collection-summary"><strong>06 works</strong><span>/</span>巨构艺术<span>·</span>叙事续写<span>·</span>原创世界</p>
+            </section>
+
+            <nav class="library-switch" aria-label="艺术库视图">
+              <button type="button" aria-label="上一组作品">←</button>
+              <span>展览</span>
+              <button type="button" aria-label="下一组作品">→</button>
+            </nav>
+
+            <section class="orbit-stage" id="orbit-stage" aria-label="艺术库作品。随页面滚动浏览，也可拖拽或使用方向键。" tabindex="0">
+              <svg class="orbit-guide" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true"><path d="M 4 -4 Q 198 50 4 104"></path></svg>
+
+              <article class="orbit-piece" data-orbit-slot="0" aria-hidden="true"><figure><img alt="" draggable="false" /><figcaption><b></b><strong></strong><small></small></figcaption></figure></article>
+              <article class="orbit-piece" data-orbit-slot="1" aria-hidden="true"><figure><img alt="" draggable="false" /><figcaption><b></b><strong></strong><small></small></figcaption></figure></article>
+              <article class="orbit-piece" data-orbit-slot="2" aria-hidden="true"><figure><img alt="" draggable="false" /><figcaption><b></b><strong></strong><small></small></figcaption></figure></article>
+              <article class="orbit-piece" data-orbit-slot="3" aria-hidden="true"><figure><img alt="" draggable="false" /><figcaption><b></b><strong></strong><small></small></figcaption></figure></article>
+              <article class="orbit-piece" data-orbit-slot="4" aria-hidden="true"><figure><img alt="" draggable="false" /><figcaption><b></b><strong></strong><small></small></figcaption></figure></article>
+              <article class="orbit-piece" data-orbit-slot="5" aria-hidden="true"><figure><img alt="" draggable="false" /><figcaption><b></b><strong></strong><small></small></figcaption></figure></article>
+            </section>
+
+            <div class="orbit-hud" aria-hidden="true">
+              <span id="orbit-current">01</span>
+              <span class="orbit-hud-line"><i></i></span>
+              <span>06</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="continuation" id="next-experience" aria-label="后续分镜待继续制作">
+        <p>下一章</p>
+        <h2>从喜欢的内容，找到创作方向。</h2>
+      </section>
+    </main>
+
+    <script>document.documentElement.classList.add("has-motion-runtime");</script>
+    <script src="./vendor/gsap.min.js"></script>
+    <script src="./vendor/ScrollTrigger.min.js"></script>
+    <script src="./redesign-v2.js"></script>
+  </body>
+</html>
