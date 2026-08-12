@@ -845,10 +845,11 @@
     const productWindow = document.querySelector(".growth-product-window");
     const windowSource = document.querySelector(".growth-window-source");
     const windowFinal = document.querySelector(".growth-window-final");
-    const destinationCopy = [...document.querySelectorAll(".growth-product-heading, .growth-product-copy, .growth-product-nav, .growth-product-detail, .growth-product-composition figcaption")];
+    const destinationCopy = [...document.querySelectorAll(".growth-world-copy, .growth-world-arc")];
     const heading = document.querySelector(".agent-growth-heading");
     const progressCard = document.querySelector(".growth-progress-card");
     const progressName = progressCard?.querySelector(".growth-progress-name");
+    const progressPrefix = progressCard?.querySelector(".growth-progress-prefix");
     const progressValue = document.getElementById("agent-growth-value");
     const commandName = growthChapter.querySelector(".command-name");
     const commandSlash = growthChapter.querySelector(".command-slash");
@@ -856,11 +857,15 @@
     const commandCopy = growthChapter.querySelector(".command-copy");
     const commandCaret = growthChapter.querySelector(".command-caret");
     const growthAura = growthChapter.querySelector(".growth-aura");
+    const fixedCommandSlash = document.querySelector(".growth-prelude .command-slash");
     const fixedCommandGrowthWord = document.querySelector(".growth-prelude .command-growth-word");
+    const fixedCommandCopy = document.querySelector(".growth-prelude .command-copy");
+    const fixedCommandCaret = document.querySelector(".growth-prelude .command-caret");
     const orbitDecoration = document.querySelector(".growth-progress-orbit");
     const traces = [...document.querySelectorAll(".growth-progress-traces i")];
+    const startrails = document.querySelector(".growth-startrails");
     const index = document.querySelector(".agent-growth-index");
-    if (!growthChapter || !transitionSection || !transitionStage || !sourceFrame || !blueprint || !veil || !destination || !productWindow || !windowSource || !windowFinal || !heading || !progressCard || !progressName || !progressValue || !commandName || !commandGrowthWord) return;
+    if (!growthChapter || !transitionSection || !transitionStage || !sourceFrame || !blueprint || !veil || !destination || !productWindow || !windowSource || !windowFinal || !heading || !progressCard || !progressName || !progressPrefix || !progressValue || !commandName || !commandGrowthWord) return;
 
     const sharedName = document.createElement("span");
     sharedName.className = "growth-shared-name";
@@ -868,38 +873,129 @@
     sharedName.innerHTML = "<b>Growth</b>";
     document.body.append(sharedName);
 
+    const handoffBackdrop = document.createElement("div");
+    handoffBackdrop.className = "growth-handoff-backdrop";
+    handoffBackdrop.setAttribute("aria-hidden", "true");
+    document.body.append(handoffBackdrop);
+
     document.body.append(progressCard);
 
-    const contextBackdrop = document.createElement("div");
-    contextBackdrop.className = "agent-growth-context";
-    contextBackdrop.setAttribute("aria-hidden", "true");
-    const sidebarGhost = document.querySelector(".product-sidebar")?.cloneNode(true);
-    if (sidebarGhost) {
-      [sidebarGhost, ...sidebarGhost.querySelectorAll("*")].forEach((element) => element.removeAttribute("style"));
-      sidebarGhost.className = "growth-sidebar-ghost";
-      sidebarGhost.removeAttribute("aria-label");
-      contextBackdrop.append(sidebarGhost);
-    }
-    document.body.append(contextBackdrop);
+    const progressState = { value: 0 };
+    const startrailContext = startrails?.getContext("2d", { alpha: true });
+    const startrailState = { progress: 0 };
+    const starCatalog = Array.from({ length: 96 }, (_, starIndex) => {
+      const normalized = (starIndex + .5) / 96;
+      const jitter = ((starIndex * 47) % 31) / 31;
+      return {
+        radius: .055 + normalized * .83 + (jitter - .5) * .016,
+        angle: ((starIndex * 137.508 + jitter * 21) * Math.PI) / 180,
+        speed: .66 + ((starIndex * 19) % 23) / 42,
+        alpha: .17 + ((starIndex * 29) % 17) / 31,
+        width: starIndex % 13 === 0 ? 1.4 : starIndex % 5 === 0 ? .9 : .55,
+        warm: starIndex % 7 !== 0,
+      };
+    });
 
-    const progressState = { value: 0, fill: 0 };
+    function renderStartrails() {
+      if (!startrails || !startrailContext) return;
+      const { width, height } = startrails;
+      startrailContext.clearRect(0, 0, width, height);
+      const progress = clamp(startrailState.progress, 0, 1);
+      if (progress <= .001) return;
+      const centerX = width * (window.innerWidth <= 860 ? .31 : .38);
+      const centerY = height * (window.innerWidth <= 860 ? .3 : .42);
+      const maxRadius = Math.hypot(Math.max(centerX, width - centerX), Math.max(centerY, height - centerY));
+      const arcGrowth = .025 + progress * 1.72;
+      startrailContext.lineCap = "round";
+
+      starCatalog.forEach((star) => {
+        const radius = star.radius * maxRadius;
+        const head = star.angle + progress * 1.58 * star.speed;
+        const arcLength = arcGrowth * (.72 + star.speed * .36);
+        const start = head - arcLength;
+        const color = star.warm ? "191,133,40" : "119,132,143";
+        const gradient = startrailContext.createLinearGradient(
+          centerX + Math.cos(start) * radius,
+          centerY + Math.sin(start) * radius,
+          centerX + Math.cos(head) * radius,
+          centerY + Math.sin(head) * radius,
+        );
+        gradient.addColorStop(0, `rgba(${color},0)`);
+        gradient.addColorStop(.64, `rgba(${color},${star.alpha * .42})`);
+        gradient.addColorStop(1, `rgba(${color},${star.alpha})`);
+        startrailContext.beginPath();
+        startrailContext.arc(centerX, centerY, radius, start, star.angle);
+        startrailContext.strokeStyle = gradient;
+        startrailContext.lineWidth = star.width;
+        startrailContext.stroke();
+        if (star.width <= .8) return;
+        const headX = centerX + Math.cos(head) * radius;
+        const headY = centerY + Math.sin(head) * radius;
+        startrailContext.beginPath();
+        startrailContext.arc(headX, headY, star.width * .85, 0, Math.PI * 2);
+        startrailContext.fillStyle = `rgba(${color},${Math.min(.72, star.alpha * 1.35)})`;
+        startrailContext.fill();
+
+        // Sparse ornaments echo the original page's stars, rings and diamonds.
+        startrailContext.save();
+        startrailContext.translate(headX, headY);
+        startrailContext.strokeStyle = `rgba(${color},${Math.min(.72, star.alpha * 1.45)})`;
+        startrailContext.fillStyle = `rgba(${color},${Math.min(.68, star.alpha * 1.3)})`;
+        startrailContext.lineWidth = .75;
+        if (star.width > 1.3) {
+          const size = 4.2;
+          startrailContext.beginPath();
+          startrailContext.moveTo(0, -size);
+          startrailContext.lineTo(1.1, -1.1);
+          startrailContext.lineTo(size, 0);
+          startrailContext.lineTo(1.1, 1.1);
+          startrailContext.lineTo(0, size);
+          startrailContext.lineTo(-1.1, 1.1);
+          startrailContext.lineTo(-size, 0);
+          startrailContext.lineTo(-1.1, -1.1);
+          startrailContext.closePath();
+          startrailContext.fill();
+          startrailContext.beginPath();
+          startrailContext.arc(0, 0, size * 1.9, 0, Math.PI * 2);
+          startrailContext.stroke();
+        } else if (Math.round(star.radius * 1000) % 4 === 0) {
+          startrailContext.beginPath();
+          startrailContext.arc(0, 0, 3.6, 0, Math.PI * 2);
+          startrailContext.stroke();
+        } else if (Math.round(star.radius * 1000) % 5 === 0) {
+          startrailContext.rotate(head + Math.PI / 4);
+          startrailContext.fillRect(-2, -2, 4, 4);
+        }
+        startrailContext.restore();
+      });
+    }
+
+    const resizeStartrails = () => {
+      if (!startrails || !startrailContext) return;
+      const scale = window.innerWidth <= 860 ? .55 : .65;
+      startrails.width = Math.max(1, Math.round(window.innerWidth * scale));
+      startrails.height = Math.max(1, Math.round(window.innerHeight * scale));
+      renderStartrails();
+    };
+    window.addEventListener("resize", resizeStartrails, { passive: true });
 
     const renderProgress = () => {
       const value = clamp(progressState.value, 0, 100);
       const rounded = Math.round(value);
       progressValue.textContent = String(rounded).padStart(2, "0");
-      progressCard.style.setProperty("--growth-progress", `${clamp(progressState.fill, 0, 100)}%`);
+      // The track always represents a complete 0-100 scale; this scene stops at 68.
+      progressCard.style.setProperty("--growth-progress", `${value}%`);
     };
 
     const getBlueprintGeometry = () => {
-      const stageRect = sourceFrame.getBoundingClientRect();
+      const windowRect = productWindow.getBoundingClientRect();
       const imageRatio = 1672 / 941;
-      const stageRatio = stageRect.width / Math.max(1, stageRect.height);
-      const renderedWidth = stageRatio > imageRatio ? stageRect.height * imageRatio : stageRect.width;
-      const renderedHeight = stageRatio > imageRatio ? stageRect.height : stageRect.width / imageRatio;
-      const imageLeft = (stageRect.width - renderedWidth) / 2;
-      const imageTop = (stageRect.height - renderedHeight) / 2;
-      // Target is the Growth progress panel in the storyboard's middle column.
+      const windowRatio = windowRect.width / Math.max(1, windowRect.height);
+      const renderedWidth = windowRatio > imageRatio ? windowRect.height * imageRatio : windowRect.width;
+      const renderedHeight = windowRatio > imageRatio ? windowRect.height : windowRect.width / imageRatio;
+      const imageLeft = windowRect.left + (windowRect.width - renderedWidth) / 2;
+      const imageTop = windowRect.top + (windowRect.height - renderedHeight) / 2;
+      // Progress panel in storyboard-04-agent-growth.png.
       const target = { x: 500 / 1672, y: 240 / 941, width: 255 / 1672, height: 136 / 941 };
       return {
         x: imageLeft + renderedWidth * (target.x + target.width / 2),
@@ -953,7 +1049,6 @@
       const { desktop, reduce } = context.conditions;
       if (reduce) {
         progressState.value = 68;
-        progressState.fill = 100;
         renderProgress();
         gsap.set(sourceFrame, { autoAlpha: 0 });
         gsap.set(destination, { autoAlpha: 1 });
@@ -961,18 +1056,23 @@
         gsap.set(windowFinal, { autoAlpha: 1 });
         gsap.set(veil, { autoAlpha: 0 });
         gsap.set([heading, orbitDecoration, traces, index], { autoAlpha: 0 });
+        gsap.set(startrails, { autoAlpha: 0 });
         gsap.set(progressCard, { autoAlpha: 0 });
         gsap.set(sharedName, { autoAlpha: 0 });
-        gsap.set(contextBackdrop, { autoAlpha: 1 });
+        gsap.set(handoffBackdrop, { autoAlpha: 0 });
         return;
       }
 
-      gsap.set(sourceFrame, { inset: 0, autoAlpha: 1, borderRadius: 0, boxShadow: "0 0 0 rgba(62,44,25,0)", filter: "blur(12px) saturate(.72) contrast(.92) brightness(.72)" });
+      gsap.set(sourceFrame, { inset: 0, autoAlpha: 1, borderRadius: 0, boxShadow: "0 0 0 rgba(62,44,25,0)", filter: "blur(16px) saturate(.72) contrast(.92) brightness(.9)", scale: 1.045 });
       gsap.set(blueprint, { autoAlpha: 1 });
       gsap.set(destination, { autoAlpha: 0 });
       gsap.set(destinationCopy, { autoAlpha: 0, y: 14 });
-      gsap.set(windowSource, { autoAlpha: 1 });
-      gsap.set(windowFinal, { autoAlpha: 0 });
+      gsap.set(windowSource, { autoAlpha: 1, top: 0, left: 0, width: "100%", height: "100%", borderRadius: 0 });
+      gsap.set(windowFinal, {
+        autoAlpha: 0,
+        clipPath: "inset(25.5% 54.8% 60% 29.9% round 5px)",
+        scale: 1,
+      });
       gsap.set(veil, { autoAlpha: 1 });
       gsap.set(heading, { autoAlpha: 0, y: 28 });
       gsap.set(progressCard, {
@@ -981,11 +1081,15 @@
         y: () => -progressCard.offsetHeight / 2,
         scale: 1,
       });
-      gsap.set(contextBackdrop, { autoAlpha: 0 });
+      gsap.set(handoffBackdrop, { autoAlpha: 0 });
       gsap.set(progressName, { autoAlpha: 0 });
+      gsap.set(progressPrefix, { autoAlpha: 0 });
       gsap.set(sharedName, { autoAlpha: 0, color: "#ecd4a3", textShadow: "0 0 16px rgba(236, 212, 163, 0.32), 0 0 48px rgba(201, 165, 106, 0.2)" });
       gsap.set(orbitDecoration, { autoAlpha: 0, scale: 0.72, rotation: -12 });
       gsap.set(traces, { autoAlpha: 0, scaleY: 0 });
+      startrailState.progress = 0;
+      resizeStartrails();
+      gsap.set(startrails, { autoAlpha: 0 });
       gsap.set(index, { autoAlpha: 0, x: 12 });
 
       const enterTimeline = gsap.timeline({
@@ -999,37 +1103,36 @@
         },
       });
       enterTimeline
-        .fromTo([commandSlash, commandCopy, commandCaret], { autoAlpha: 1 }, { autoAlpha: 0, duration: .3, ease: "power2.in", immediateRender: false }, 0)
-        .fromTo(growthAura, { autoAlpha: 1 }, { autoAlpha: 0, duration: .36, immediateRender: false }, 0)
-        .to(contextBackdrop, { autoAlpha: 1, duration: .5, ease: "power2.inOut" }, .05)
-        .to(veil, { autoAlpha: .08, duration: .5, ease: "power2.inOut" }, .05)
-        .fromTo(sharedName, {
-          autoAlpha: 0,
+        .addLabel("clearCopy", 0)
+        .addLabel("handoffGrowth", .28)
+        .addLabel("showProgress", .42)
+        .fromTo(handoffBackdrop, { autoAlpha: 0 }, { autoAlpha: 1, duration: .08, immediateRender: false }, "clearCopy")
+        .to([commandSlash, commandCopy, commandCaret, fixedCommandSlash, fixedCommandCopy, fixedCommandCaret].filter(Boolean), { autoAlpha: 0, duration: .28, ease: "power2.in" }, "clearCopy")
+        .fromTo(growthAura, { autoAlpha: 1 }, { autoAlpha: 0, duration: .3, immediateRender: false }, "clearCopy")
+        .set(sharedName, {
           x: () => getCommandGeometry().x,
           y: () => getCommandGeometry().y,
           scale: () => getCommandGeometry().scale,
-        }, {
           autoAlpha: 1,
-          duration: .06,
-          immediateRender: false,
-        }, 0)
-        .fromTo(commandGrowthWord, { autoAlpha: 1 }, { autoAlpha: 0, duration: .06, immediateRender: false }, 0)
-        .to(progressCard, { autoAlpha: 1, duration: .4, ease: "power2.out" }, .16)
+        }, "handoffGrowth")
+        .set([commandGrowthWord, fixedCommandGrowthWord].filter(Boolean), { autoAlpha: 0 }, "handoffGrowth")
         .to(sharedName, {
           x: () => getProgressNameGeometry().x,
           y: () => getProgressNameGeometry().y,
-          duration: .5,
+          duration: .44,
           ease: "power3.inOut",
-        }, .12)
+        }, "handoffGrowth")
         .to(sharedName, {
           scale: () => getProgressNameGeometry().scale,
           color: "#b57b22",
           textShadow: "0 0 0 rgba(0,0,0,0)",
-          duration: .3,
+          duration: .18,
           ease: "power3.inOut",
-        }, .12)
-        .to(progressName, { autoAlpha: 1, duration: .07 }, .61)
-        .to(sharedName, { autoAlpha: 0, duration: .09 }, .61)
+        }, "handoffGrowth")
+        .to(progressCard, { autoAlpha: 1, duration: .34, ease: "power2.out" }, "showProgress")
+        .to(progressPrefix, { autoAlpha: 1, duration: .12, ease: "power2.out" }, .62)
+        .to(progressName, { autoAlpha: 1, duration: .07 }, .72)
+        .to(sharedName, { autoAlpha: 0, duration: .07 }, .72)
         .to({}, { duration: .12 });
 
       const growthTimeline = gsap.timeline({
@@ -1045,50 +1148,77 @@
       });
 
       growthTimeline
+        .addLabel("growthComplete", .54)
+        .addLabel("shrinkWorkbench", .66)
+        .addLabel("landProgress", .80)
+        .addLabel("revealGrowth", .93)
+        .to(handoffBackdrop, { autoAlpha: 0, duration: .12 }, 0)
         .to(heading, { autoAlpha: 1, y: 0, duration: .08, ease: "power2.out" }, 0)
         .to(orbitDecoration, { autoAlpha: 1, scale: 1, rotation: 0, duration: .1, ease: "power2.out" }, 0)
         .to(traces, { autoAlpha: .7, scaleY: 1, stagger: .012, duration: .08, ease: "power2.out" }, .01)
         .to(index, { autoAlpha: 1, x: 0, duration: .07 }, .02)
-        .to(progressState, { value: 14, fill: 20, duration: .14, onUpdate: renderProgress }, 0)
+        .to(startrails, { autoAlpha: .78, duration: .12, ease: "power2.out" }, 0)
+        .to(startrailState, { progress: 1, duration: .54, onUpdate: renderStartrails }, 0)
+        .to(progressState, { value: 14, duration: .14, onUpdate: renderProgress }, 0)
         .to(orbitDecoration, { rotation: 54, scale: 1.06, duration: .32 }, 0)
-        .to(progressState, { value: 31, fill: 46, duration: .16, onUpdate: renderProgress }, .14)
+        .to(progressState, { value: 31, duration: .16, onUpdate: renderProgress }, .14)
         .to(traces, { rotation: (traceIndex) => traceIndex % 2 ? -8 : 8, stagger: .025, duration: .16 }, .14)
-        .to(progressState, { value: 49, fill: 72, duration: .18, onUpdate: renderProgress }, .3)
+        .to(progressState, { value: 49, duration: .18, onUpdate: renderProgress }, .3)
         .to(progressCard, { scale: 1.025, duration: .1, ease: "power2.out" }, .31)
         .to(progressCard, { scale: 1, duration: .09, ease: "power2.in" }, .41)
-        .to(progressState, { value: 60, fill: 88, duration: .1, onUpdate: renderProgress }, .48)
-        .to(progressState, { value: 68, fill: 100, duration: .1, onUpdate: renderProgress }, .58)
+        .to(progressState, { value: 60, duration: .08, onUpdate: renderProgress }, .46)
+        .to(progressState, { value: 68, duration: .06, onUpdate: renderProgress }, "growthComplete")
+        .to(startrails, { autoAlpha: 0, duration: .14, ease: "power2.in" }, "growthComplete")
         .to(heading, { autoAlpha: 0, y: -48, duration: .14 }, .54)
         .to([orbitDecoration, traces, index], { autoAlpha: 0, duration: .14 }, .54)
-        .to(contextBackdrop, { autoAlpha: 0, duration: .22 }, .54)
-        .to(veil, { autoAlpha: 0, duration: .2 }, .56)
-        .to(sourceFrame, { filter: "blur(0px) saturate(1) contrast(1) brightness(1)", duration: .18, ease: "power2.out" }, .56)
+        .to(destination, { autoAlpha: 1, duration: .08, ease: "power2.out" }, .62)
+        .to(veil, { autoAlpha: 0, duration: .16 }, .62)
+        .to(sourceFrame, {
+          inset: () => {
+            const target = getWindowGeometry();
+            return `${target.top}px ${transitionStage.clientWidth - target.left - target.width}px ${transitionStage.clientHeight - target.top - target.height}px ${target.left}px`;
+          },
+          borderRadius: 4,
+          boxShadow: "0 28px 70px rgba(62,44,25,.15)",
+          scale: 1,
+          duration: .12,
+          ease: "power3.inOut",
+        }, "shrinkWorkbench")
+        .to(destinationCopy, { autoAlpha: 1, y: 0, stagger: .012, duration: .12, ease: "power2.out" }, .66)
+        .to(sourceFrame, {
+          filter: "blur(0px) saturate(1) contrast(1) brightness(1)",
+          duration: .08,
+          ease: "power2.out",
+        }, "landProgress")
         .to(progressCard, {
           x: () => getBlueprintGeometry().x - window.innerWidth / 2 - progressCard.offsetWidth / 2,
           y: () => getBlueprintGeometry().y - window.innerHeight / 2 - progressCard.offsetHeight / 2,
           scaleX: () => getBlueprintGeometry().width / Math.max(1, progressCard.offsetWidth),
           scaleY: () => getBlueprintGeometry().height / Math.max(1, progressCard.offsetHeight),
-          autoAlpha: .92,
-          duration: .16,
+          autoAlpha: 1,
+          duration: .10,
           ease: "power3.inOut",
-        }, .6)
-        .to(progressCard, { autoAlpha: 0, duration: .035 }, .755)
-        .to(destination, { autoAlpha: 1, duration: .18, ease: "power2.inOut" }, .7)
-        .to(sourceFrame, {
-          inset: () => {
-            const target = getWindowGeometry();
-            return `${target.top}px ${window.innerWidth - target.left - target.width}px ${window.innerHeight - target.top - target.height}px ${target.left}px`;
-          },
-          borderRadius: 4,
-          boxShadow: "0 28px 70px rgba(62,44,25,.15)",
-          duration: .2,
+        }, "landProgress")
+        // The landed source frame and windowSource are the same bitmap. Swap them
+        // before revealing the generated work so the two layouts never crossfade.
+        .set(sourceFrame, { autoAlpha: 0 }, "revealGrowth")
+        .to(windowSource, {
+          top: "2.4%",
+          left: "16.6%",
+          width: "68.8%",
+          height: "95.2%",
+          borderRadius: 5,
+          duration: .122,
           ease: "power3.inOut",
-        }, .72)
-        .to(destinationCopy, { autoAlpha: 1, y: 0, stagger: .012, duration: .12, ease: "power2.out" }, .78)
-        .to(sourceFrame, { autoAlpha: 0, duration: .025 }, .915)
-        .to(windowFinal, { autoAlpha: 1, duration: .12, ease: "power2.inOut" }, .91)
-        .to(windowSource, { autoAlpha: 0, duration: .12, ease: "power2.inOut" }, .91)
-        .to({}, { duration: .08 });
+        }, "revealGrowth+=.018")
+        .set(windowFinal, { autoAlpha: 1 }, "revealGrowth")
+        .to(windowFinal, {
+          clipPath: "inset(0% 0% 0% 0% round 0px)",
+          duration: .14,
+          ease: "power2.inOut",
+        }, "revealGrowth")
+        .to(progressCard, { autoAlpha: 0, scaleX: "*=.94", scaleY: "*=.94", duration: .07, ease: "power2.in" }, "revealGrowth+=.07")
+        .set(windowSource, { autoAlpha: 0 }, "revealGrowth+=.14");
     });
   }
 

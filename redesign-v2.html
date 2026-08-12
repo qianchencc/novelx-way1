@@ -177,40 +177,40 @@
       <section class="agent-growth-transition" id="agent-growth" aria-labelledby="agent-growth-title">
         <div class="agent-growth-stage">
           <div class="agent-growth-destination" id="agent-growth-workspace">
-            <header class="growth-product-heading">
-              <p>从内容到创作</p>
-              <h2>一次心动，沿着同一条脉络生长。</h2>
-            </header>
+            <img class="growth-world-background" src="./assets/intro-ink-world.png" alt="" aria-hidden="true" />
+            <div class="growth-world-wash" aria-hidden="true"></div>
+            <div class="growth-world-grain" aria-hidden="true"></div>
 
-            <div class="growth-product-copy">
-              <span>Agent 生长</span>
-              <h3>你决定方向，Agent 完成手艺。</h3>
-              <p>从世界结构到文章与配图，多步任务持续推进，所有结果进入同一个真实项目。</p>
-            </div>
+            <article class="growth-world-copy">
+              <span class="growth-world-ghost" aria-hidden="true">WORLD</span>
+              <p>构建世界</p>
+              <h2><span>世界</span><span>从此构建<i aria-hidden="true"></i></span></h2>
+              <small>地理、国家、组织与规则，在世界档案中彼此关联。</small>
+            </article>
+
+            <svg class="growth-world-arc" viewBox="0 0 440 120" aria-hidden="true">
+              <path d="M 8 92 C 114 14 282 18 424 66"></path>
+              <circle cx="62" cy="61" r="3"></circle>
+              <circle cx="332" cy="34" r="2"></circle>
+              <path class="growth-world-star" d="M 424 56 L 428 63 L 435 66 L 428 69 L 424 76 L 420 69 L 413 66 L 420 63 Z"></path>
+            </svg>
 
             <figure class="growth-product-composition">
               <div class="growth-product-window">
-                <img class="growth-window-source" src="./assets/generated-storyboards/storyboard-04-agent-growth.png" alt="诺文 Growth 工作区，展示创作任务进度、文章与配图成果" />
-                <img class="growth-window-final" src="./assets/product-growth-workbench.png" alt="诺文 Growth 工作台，同时展示 Agent 报告、项目文件、文章与配图" />
+                <img class="growth-window-source" src="./assets/redesign-v2-art/product-shell-empty.png" alt="诺文项目界面，左侧为项目导航，右侧为空白工作区" />
+                <img class="growth-window-final" src="./assets/generated-storyboards/storyboard-04-agent-growth.png" alt="诺文 Growth 工作区，展示创作任务进度、文章与配图成果" />
+                <span class="growth-window-glare" aria-hidden="true"></span>
+                <span class="growth-window-frame" aria-hidden="true"></span>
               </div>
-              <div class="growth-product-detail" aria-hidden="true">
-                <img src="./assets/product-growth-workbench.png" alt="" />
-              </div>
-              <figcaption>世界观、角色、故事与图像，在同一份上下文中彼此咬合。</figcaption>
             </figure>
-
-            <ol class="growth-product-nav" aria-label="诺文内容创作流程">
-              <li><span>视频来源</span><small>传承库</small></li>
-              <li><span>灵感凝结</span><small>灵感库</small></li>
-              <li class="is-active"><span>Agent 生长</span><small>Growth</small></li>
-              <li><span>作品归档</span><small>艺术库</small></li>
-            </ol>
           </div>
 
           <div class="agent-growth-source-frame">
-            <img class="agent-growth-blueprint" src="./assets/generated-storyboards/storyboard-04-agent-growth.png" alt="诺文 Growth 工作区，展示创作任务进度、文章与配图成果" />
+            <img class="agent-growth-blueprint" src="./assets/redesign-v2-art/product-shell-empty.png" alt="诺文项目界面，左侧为项目导航，右侧为空白工作区" />
           </div>
           <div class="agent-growth-veil" aria-hidden="true"></div>
+
+          <canvas class="growth-startrails" aria-hidden="true"></canvas>
 
           <header class="agent-growth-heading">
             <p>Agent Growth / Live process</p>
@@ -222,7 +222,7 @@
           </div>
 
           <article class="growth-progress-card" aria-label="Growth 创作任务进行中">
-            <div class="growth-progress-topline"><span>继续 <b class="growth-progress-name">Growth</b></span></div>
+            <div class="growth-progress-topline"><span><span class="growth-progress-prefix">继续</span> <b class="growth-progress-name">Growth</b></span></div>
             <div class="growth-progress-reading">
               <strong>进行中</strong>
               <span class="growth-progress-number"><b id="agent-growth-value">00</b><i>%</i></span>
@@ -239,11 +239,79 @@
           <p class="agent-growth-index" aria-hidden="true"><span>04</span><i></i><b>100</b></p>
         </div>
       </section>
+
+      <section class="atlas-continuum" id="atlas-continuum" aria-labelledby="continuum-atlas-title">
+        <div class="atlas-continuum-stage">
+          <div class="atlas-continuum-world" aria-hidden="true">
+            <img src="./assets/intro-ink-world.png" alt="" />
+            <span></span>
+          </div>
+
+          <article class="atlas-continuum-copy">
+            <span aria-hidden="true">WORLD</span>
+            <p>构建世界</p>
+            <h2><i>世界</i><i>从此构建</i></h2>
+            <small>地理、国家、组织与规则，在世界档案中彼此关联。</small>
+          </article>
+
+          <div class="atlas-book-shell">
+            <div class="atlas-book-page atlas-book-front">
+              <img src="./assets/generated-storyboards/storyboard-04-agent-growth.png" alt="诺文 Growth 工作区，展示文章与配图成果" />
+            </div>
+
+            <div class="atlas-book-page atlas-book-back">
+              <aside class="atlas-product-sidebar" aria-hidden="true">
+                <header><i></i><b></b></header>
+                <div class="atlas-sidebar-index"><i></i><i></i></div>
+                <div class="atlas-sidebar-title"><i></i><i></i></div>
+                <div class="atlas-sidebar-copy"><i></i><i></i><i></i></div>
+                <div class="atlas-sidebar-rule"><i></i><i></i></div>
+                <footer><i></i><i></i><i></i><i></i></footer>
+              </aside>
+              <div class="atlas-product-map"><img src="./assets/atlas-base.webp" alt="幻想大陆地图产品页面" /></div>
+            </div>
+            <span class="atlas-page-shadow" aria-hidden="true"></span>
+          </div>
+
+          <section class="continuum-atlas" aria-label="可交互的幻想大陆地图">
+            <header class="continuum-atlas-heading">
+              <p>World atlas / Living geography</p>
+              <h2 id="continuum-atlas-title">世界图志</h2>
+            </header>
+
+            <div class="continuum-atlas-map-shell">
+              <div class="continuum-atlas-map">
+                <div class="continuum-atlas-layers">
+                  <img class="continuum-atlas-image continuum-atlas-base" src="./assets/atlas-base-cutout.webp" alt="绘有山脉、森林、湖泊、河流和海岸的幻想大陆地图" width="1448" height="1086" />
+                  <span class="continuum-atlas-highlight" data-continuum-region="western-bay" aria-hidden="true"><img src="./assets/atlas-western-bay-layer.webp" alt="" /></span>
+                  <span class="continuum-atlas-highlight" data-continuum-region="central-ridge" aria-hidden="true"><img src="./assets/atlas-central-ridge-layer.webp" alt="" /></span>
+                  <span class="continuum-atlas-highlight" data-continuum-region="northern-forest" aria-hidden="true"><img src="./assets/atlas-northern-forest-layer.webp" alt="" /></span>
+                  <span class="continuum-atlas-highlight" data-continuum-region="northern-highlands" aria-hidden="true"><img src="./assets/atlas-northern-highlands-layer.webp" alt="" /></span>
+                  <span class="continuum-atlas-highlight" data-continuum-region="eastern-lakes" aria-hidden="true"><img src="./assets/atlas-eastern-lakes-layer.webp" alt="" /></span>
+                  <span class="continuum-atlas-highlight" data-continuum-region="southern-forest" aria-hidden="true"><img src="./assets/atlas-southern-forest-layer.webp" alt="" /></span>
+                  <span class="continuum-atlas-highlight" data-continuum-region="southern-coast" aria-hidden="true"><img src="./assets/atlas-southern-coast-layer.webp" alt="" /></span>
+                </div>
+                <svg class="continuum-atlas-hotspots" viewBox="0 0 1448 1086" role="group" aria-label="地图区域"></svg>
+                <span class="continuum-atlas-locator" aria-hidden="true"><i></i><b></b></span>
+                <span class="continuum-atlas-pin" aria-hidden="true"><i></i></span>
+              </div>
+            </div>
+
+            <div class="continuum-atlas-copy" aria-live="polite">
+              <span class="continuum-region-name">完整大陆</span>
+              <p class="continuum-region-description">每一处地理，都能成为故事的起点。</p>
+            </div>
+          </section>
+
+          <p class="atlas-continuum-index" aria-hidden="true"><span>05</span><i></i><b>ATLAS</b></p>
+        </div>
+      </section>
     </main>
 
     <script>document.documentElement.classList.add("has-motion-runtime");</script>
     <script src="./vendor/gsap.min.js"></script>
     <script src="./vendor/ScrollTrigger.min.js"></script>
+    <script src="./assets/atlas-hotspots.js"></script>
     <script src="./redesign-v2.js"></script>
   </body>
 </html>
