@@ -19,12 +19,11 @@
     { title: "冰壁巨柱", image: "./assets/redesign-v2-art/01-ice-wall-pillars.webp", meta: "2026-06-01 / 1hz脉冲 / WeChat Official Account" },
     { title: "雾塔阵列", image: "./assets/redesign-v2-art/02-mist-tower-array.webp", meta: "2026-06-01 / 1hz脉冲 / WeChat Official Account" },
     { title: "高墙天际", image: "./assets/redesign-v2-art/03-high-wall-skyline.webp", meta: "2026-06-01 / 1hz脉冲 / WeChat Official Account" },
-    { title: "我想体验我喜欢的短剧。", image: "./assets/redesign-v2-art/04-question-short-drama.png", meta: "点击开始", action: "#next-experience" },
-    { title: "我想续写我喜欢的小说。", image: "./assets/redesign-v2-art/05-question-novel.png", meta: "点击开始", action: "#next-experience" },
-    { title: "我想为我的OC打造完整的世界。", image: "./assets/redesign-v2-art/06-question-oc-world.png", meta: "点击开始", action: "#next-experience" },
+    { title: "我想体验我喜欢的短剧....", image: "./assets/redesign-v2-art/04-question-short-drama.png", meta: "点击选择", action: "growth", label: "短剧体验" },
+    { title: "我想续写我喜欢的小说....", image: "./assets/redesign-v2-art/05-question-novel.png", meta: "点击选择", action: "growth", label: "小说续写" },
+    { title: "我想为我的OC打造完整的世界....", image: "./assets/redesign-v2-art/06-question-oc-world.png", meta: "点击选择", action: "growth", label: "OC 世界" },
   ];
 
-  const modulo = (value, length) => ((value % length) + length) % length;
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const smoothstep = (edge0, edge1, value) => {
     const amount = clamp((value - edge0) / Math.max(0.0001, edge1 - edge0), 0, 1);
@@ -218,33 +217,25 @@
       offset: 0,
       ratio: 0.72,
     }));
-    const offsets = [-2, -1, 0, 1, 2];
-    const desktopRecords = records.slice(0, offsets.length);
     let currentPosition = 0;
     let targetPosition = 0;
     let introProgress = 0;
+    let exitProgress = 0;
     let frame = 0;
-    let reconciledBase = Number.NaN;
+    let positionTween = null;
+    const positionMotion = { value: 0 };
     let dragging = false;
+    let pointerPending = false;
+    let dragPointerId = null;
+    let suppressClick = false;
     let pointerStartY = 0;
     let pointerStartPosition = 0;
+    let selectedItemIndex = null;
+    let selectionCallback = null;
+    let selectionLocked = false;
 
     const bindRecord = (record, itemIndex) => {
-      if (itemIndex < 0 || itemIndex >= artItems.length) {
-        record.itemIndex = -1;
-        record.element.classList.add("is-empty");
-        record.element.classList.remove("is-action", "is-active", "is-caption-visible");
-        record.element.dataset.action = "";
-        record.element.tabIndex = -1;
-        record.element.setAttribute("role", "presentation");
-        record.element.setAttribute("aria-hidden", "true");
-        record.image.removeAttribute("src");
-        record.image.alt = "";
-        record.number.textContent = "";
-        record.title.textContent = "";
-        record.meta.textContent = "";
-        return;
-      }
+      if (!Number.isInteger(itemIndex) || itemIndex < 0 || itemIndex >= artItems.length) return;
       const item = artItems[itemIndex];
       if (record.itemIndex === itemIndex) return;
       record.itemIndex = itemIndex;
@@ -256,37 +247,32 @@
       record.meta.textContent = item.meta;
       record.element.classList.toggle("is-action", Boolean(item.action));
       record.element.dataset.action = item.action || "";
+      record.element.dataset.itemIndex = String(itemIndex);
       record.element.tabIndex = item.action ? 0 : -1;
-      record.element.setAttribute("role", item.action ? "link" : "group");
+      record.element.setAttribute("role", item.action ? "button" : "group");
+      record.element.setAttribute("aria-label", item.action ? `选择：${item.title}` : item.title);
+      record.element.setAttribute("aria-pressed", item.action ? String(itemIndex === selectedItemIndex) : "false");
       record.image.onload = () => {
         record.ratio = record.image.naturalWidth / Math.max(1, record.image.naturalHeight);
         requestTick();
       };
     };
 
-    const reconcile = (baseIndex) => {
-      offsets.forEach((offset, index) => {
-        const record = desktopRecords[index];
-        record.offset = offset;
-        bindRecord(record, baseIndex + offset);
-      });
-      records.slice(offsets.length).forEach((record) => bindRecord(record, -1));
-      reconciledBase = baseIndex;
-    };
-
     const render = () => {
       if (window.innerWidth <= 860) {
-        records.forEach((record, index) => bindRecord(record, index));
+        records.forEach((record, index) => {
+          bindRecord(record, index);
+          record.element.classList.toggle("is-selected", index === selectedItemIndex);
+          if (record.element.classList.contains("is-action")) record.element.setAttribute("aria-pressed", String(index === selectedItemIndex));
+        });
         return;
       }
 
       const rect = orbitStage.getBoundingClientRect();
       const baseIndex = Math.round(currentPosition);
-      const fraction = currentPosition - baseIndex;
-      if (baseIndex !== reconciledBase) reconcile(baseIndex);
 
-      const metrics = desktopRecords.filter((record) => record.itemIndex >= 0).map((record) => {
-        const distance = record.offset - fraction;
+      const metrics = records.map((record) => {
+        const distance = record.itemIndex - currentPosition;
         const scale = 0.42 + 0.58 * Math.exp(-0.52 * distance * distance);
         const focusHeight = rect.height * 0.46;
         const focusWidth = clamp(record.ratio * focusHeight, rect.width * 0.11, rect.width * 0.3);
@@ -294,21 +280,22 @@
         return { record, distance, width, height: width / record.ratio, y: rect.height * 0.5 };
       });
 
-      const anchor = metrics.find((metric) => metric.record.offset === 0);
+      const anchor = metrics.find((metric) => metric.record.itemIndex === baseIndex);
       let previous = anchor;
-      metrics.filter((metric) => metric.record.offset > 0).forEach((metric) => {
+      metrics.filter((metric) => metric.record.itemIndex > baseIndex).forEach((metric) => {
         const overlap = clamp(Math.min(previous.height, metric.height) * 0.25, 34, 82);
         metric.y = previous.y + (previous.height + metric.height) * 0.5 - overlap;
         previous = metric;
       });
       previous = anchor;
-      metrics.filter((metric) => metric.record.offset < 0).sort((a, b) => b.record.offset - a.record.offset).forEach((metric) => {
+      metrics.filter((metric) => metric.record.itemIndex < baseIndex).sort((a, b) => b.record.itemIndex - a.record.itemIndex).forEach((metric) => {
         const overlap = clamp(Math.min(previous.height, metric.height) * 0.25, 34, 82);
         metric.y = previous.y - (previous.height + metric.height) * 0.5 + overlap;
         previous = metric;
       });
 
-      const next = metrics.find((metric) => metric.record.offset === (fraction >= 0 ? 1 : -1));
+      const fraction = currentPosition - baseIndex;
+      const next = metrics.find((metric) => metric.record.itemIndex === baseIndex + (fraction >= 0 ? 1 : -1));
       if (next && fraction !== 0) {
         const shift = -fraction * Math.abs(next.y - rect.height * 0.5);
         metrics.forEach((metric) => { metric.y += shift; });
@@ -319,15 +306,17 @@
       const radiusY = rect.height * 0.54;
       metrics.forEach((metric) => {
         const { record, distance, width, height } = metric;
-        const order = offsets.indexOf(record.offset);
-        const localIntro = smoothstep(0, 1, (introProgress * 1.6 - order * 0.11));
-        const displayY = rect.height + height * 0.65 + (metric.y - rect.height - height * 0.65) * localIntro;
+        const order = record.itemIndex;
+        const localIntro = smoothstep(0, 1, (introProgress * 1.65 - Math.min(order, 4) * 0.11));
+        const exitShift = exitProgress * (rect.height * 1.16 + order * rect.height * 0.035);
+        const displayY = rect.height + height * 0.65 + (metric.y - rect.height - height * 0.65) * localIntro - exitShift;
         const normalizedY = clamp((displayY - rect.height * 0.5) / radiusY, -1, 1);
         const x = baseX + radiusX * Math.max(0, 1 - normalizedY * normalizedY);
         const visibleTop = Math.max(0, displayY - height * 0.5);
         const visibleBottom = Math.min(rect.height, displayY + height * 0.5);
         const visibleFraction = Math.max(0, visibleBottom - visibleTop) / Math.max(1, height);
-        const opacity = localIntro * clamp(1 - Math.abs(distance) * 0.1, 0.45, 1) * smoothstep(0.02, 0.3, visibleFraction);
+        const exitOpacity = 1 - smoothstep(0.42 + order * 0.035, 0.78 + order * 0.035, exitProgress);
+        const opacity = localIntro * exitOpacity * clamp(1 - Math.abs(distance) * 0.1, 0.45, 1) * smoothstep(0.02, 0.3, visibleFraction);
 
         record.element.style.width = `${width.toFixed(2)}px`;
         record.element.style.opacity = opacity.toFixed(3);
@@ -336,6 +325,8 @@
         record.element.style.transform = `translate3d(${x.toFixed(2)}px,${displayY.toFixed(2)}px,0) translate(-50%,-50%)`;
         record.element.setAttribute("aria-hidden", opacity > 0.2 ? "false" : "true");
         record.element.classList.toggle("is-active", Math.abs(distance) < 0.5);
+        record.element.classList.toggle("is-selected", record.itemIndex === selectedItemIndex);
+        if (record.element.classList.contains("is-action")) record.element.setAttribute("aria-pressed", String(record.itemIndex === selectedItemIndex));
         record.element.classList.toggle("is-caption-visible", opacity > 0.34 && width > 112 && Math.abs(distance) < 2.25);
       });
 
@@ -358,12 +349,58 @@
     };
 
     const requestTick = () => {
-      if (!frame) frame = window.requestAnimationFrame(tick);
+      if (!frame && !positionTween) frame = window.requestAnimationFrame(tick);
     };
 
     const setPosition = (value) => {
+      positionTween?.kill();
+      positionTween = null;
       targetPosition = clamp(value, 0, artItems.length - 1);
       requestTick();
+    };
+
+    const animatePosition = (value) => {
+      const destination = clamp(value, 0, artItems.length - 1);
+      const distance = Math.abs(destination - currentPosition);
+      targetPosition = destination;
+      positionTween?.kill();
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+      if (reduceMotion.matches || distance < 0.001) {
+        currentPosition = destination;
+        positionMotion.value = destination;
+        positionTween = null;
+        render();
+        return;
+      }
+      positionMotion.value = currentPosition;
+      positionTween = gsap.to(positionMotion, {
+        value: destination,
+        duration: clamp(0.92 + distance * 0.28, 1.05, 1.65),
+        ease: "power2.inOut",
+        overwrite: true,
+        onUpdate() {
+          currentPosition = positionMotion.value;
+          render();
+        },
+        onComplete() {
+          currentPosition = destination;
+          positionMotion.value = destination;
+          positionTween = null;
+          render();
+        },
+      });
+    };
+
+    const animateToItem = (itemIndex) => {
+      animatePosition(itemIndex);
+    };
+
+    const setScrollPosition = (value) => {
+      if (selectionLocked) return;
+      setPosition(value);
     };
 
     const setProgress = (value) => {
@@ -371,24 +408,40 @@
       render();
     };
 
+    const setExitProgress = (value) => {
+      exitProgress = clamp(value, 0, 1);
+      render();
+    };
+
     orbitStage.addEventListener("pointerdown", (event) => {
       if (event.button !== 0 || window.innerWidth <= 860) return;
-      dragging = true;
+      pointerPending = true;
+      dragging = false;
+      dragPointerId = event.pointerId;
       pointerStartY = event.clientY;
       pointerStartPosition = targetPosition;
-      orbitStage.classList.add("is-dragging");
-      orbitStage.setPointerCapture(event.pointerId);
     });
     orbitStage.addEventListener("pointermove", (event) => {
-      if (!dragging) return;
+      if (!pointerPending || event.pointerId !== dragPointerId) return;
+      if (!dragging && Math.abs(event.clientY - pointerStartY) < 5) return;
+      if (!dragging) {
+        dragging = true;
+        suppressClick = true;
+        orbitStage.classList.add("is-dragging");
+        orbitStage.setPointerCapture(event.pointerId);
+      }
       setPosition(pointerStartPosition + (event.clientY - pointerStartY) * 0.011);
     });
     const stopDragging = (event) => {
+      if (!pointerPending || event.pointerId !== dragPointerId) return;
+      pointerPending = false;
+      dragPointerId = null;
       if (!dragging) return;
       dragging = false;
       orbitStage.classList.remove("is-dragging");
       if (orbitStage.hasPointerCapture(event.pointerId)) orbitStage.releasePointerCapture(event.pointerId);
       setPosition(Math.round(targetPosition));
+      window.setTimeout(() => { suppressClick = false; }, 0);
     };
     orbitStage.addEventListener("pointerup", stopDragging);
     orbitStage.addEventListener("pointercancel", stopDragging);
@@ -401,29 +454,53 @@
       }
       if (!["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft"].includes(event.key)) return;
       event.preventDefault();
-      setPosition(Math.round(targetPosition) + (["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1));
+      animatePosition(Math.round(targetPosition) + (["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1));
     });
     orbitStage.addEventListener("click", (event) => {
+      if (suppressClick) return;
       const piece = event.target.closest(".orbit-piece.is-action");
-      const destination = piece?.dataset.action && document.querySelector(piece.dataset.action);
-      if (!destination) return;
-      destination.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+      const record = records.find((candidate) => candidate.element === piece);
+      const itemIndex = record?.itemIndex;
+      if (!piece || !Number.isInteger(itemIndex) || itemIndex < 3) return;
+      selectedItemIndex = itemIndex;
+      selectionLocked = true;
+      animateToItem(itemIndex);
+      if (window.innerWidth <= 860) {
+        orbitStage.scrollTo({
+          left: piece.offsetLeft - (orbitStage.clientWidth - piece.offsetWidth) / 2,
+          behavior: reduceMotion.matches ? "auto" : "smooth",
+        });
+      }
+      selectionCallback?.(artItems[itemIndex], itemIndex, piece);
+      render();
     });
     window.addEventListener("resize", render);
 
-    reconcile(Math.round(currentPosition));
+    records.forEach((record, index) => bindRecord(record, index));
     render();
-    return { setPosition, setProgress, render };
+    return {
+      setPosition,
+      setScrollPosition,
+      setProgress,
+      setExitProgress,
+      render,
+      getSelectedItem: () => {
+        const index = selectedItemIndex ?? 5;
+        return { item: artItems[index], index };
+      },
+      getSelectedElement: () => records.find((record) => record.itemIndex === selectedItemIndex)?.element || null,
+      onSelect(callback) { selectionCallback = callback; },
+    };
   }
 
   function initScrollStory(orbit) {
     const titleElements = [".library-eyebrow", ".library-intro h2", ".library-intro blockquote", ".library-intro cite", ".collection-summary"];
-    const galleryElements = [".orbit-stage", ".library-switch", ".orbit-hud"];
+    const galleryElements = [".orbit-stage", ".orbit-hud"];
     gsap.set(".product-sidebar", { xPercent: -102 });
     gsap.set(".product-sidebar > *", { autoAlpha: 0, x: -14 });
     gsap.set(titleElements, { autoAlpha: 0, y: 16 });
     gsap.set(galleryElements, { autoAlpha: 0 });
-    gsap.set([".library-switch", ".orbit-hud"], { y: 16 });
+    gsap.set(".orbit-hud", { y: 16 });
 
     if (!reduceMotion.matches) {
       gsap.from([flightBirdBody, flightBirdWing, ".flight-bird-fallback"], { autoAlpha: 0, y: 14, duration: 0.7, ease: "power3.out" });
@@ -443,7 +520,7 @@
         gsap.set(".product-sidebar > *", { autoAlpha: 1, x: 0 });
         gsap.set(titleElements, { autoAlpha: 1, y: 0 });
         gsap.set(galleryElements, { autoAlpha: 1 });
-        gsap.set([".library-switch", ".orbit-hud"], { y: 0 });
+        gsap.set(".orbit-hud", { y: 0 });
         orbit?.setProgress(1);
         return;
       }
@@ -570,6 +647,11 @@
           end: "bottom bottom",
           scrub: 0.7,
           invalidateOnRefresh: true,
+          onUpdate(self) {
+            const time = self.animation?.time() || 0;
+            orbit?.setProgress(clamp((time - 0.14) / 0.64, 0, 1));
+            orbit?.setScrollPosition(clamp((time - 0.58) / 1.8, 0, 1) * (artItems.length - 1));
+          },
         },
       });
 
@@ -577,19 +659,436 @@
         .to(".product-sidebar", { xPercent: 0, duration: 0.34, ease: "power3.out" }, 0.04)
         .to(".product-sidebar > *", { autoAlpha: 1, x: 0, stagger: 0.025, duration: 0.3, ease: "power2.out" }, 0.1)
         .to(".orbit-stage", { autoAlpha: 1, duration: 0.3, ease: "power2.out" }, 0.14)
-        .to([".library-switch", ".orbit-hud"], { autoAlpha: 1, y: 0, stagger: 0.05, duration: 0.24, ease: "power2.out" }, 0.2)
-        .to({}, {
-          duration: 0.64,
-          onUpdate() {
-            orbit?.setProgress(this.progress());
+        .to(".orbit-hud", { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out" }, 0.2)
+        .to({}, { duration: 0.64 }, 0.14)
+        .to({}, { duration: 1.8 }, 0.58);
+    });
+  }
+
+  function initGrowthHandoff(orbit) {
+    const librarySequence = document.querySelector(".library-sequence");
+    const libraryStageElement = document.querySelector(".library-stage");
+    const growthChapter = document.querySelector(".growth-chapter");
+    const growthCopy = document.getElementById("growth-copy");
+    const growthCommand = document.querySelector(".growth-command");
+    if (!orbit || !librarySequence || !libraryStageElement || !growthChapter || !growthCopy || !growthCommand) return;
+
+    let selected = orbit.getSelectedItem();
+    growthCopy.replaceChildren();
+    const commandPhrases = Array.from({ length: 4 }, (_, phraseIndex) => {
+      const span = document.createElement("span");
+      span.className = "command-phrase";
+      if (phraseIndex < 2) growthCopy.append(span);
+      return span;
+    });
+    const commandEnding = document.createElement("span");
+    commandEnding.className = "command-ending";
+    commandEnding.append(commandPhrases[2], commandPhrases[3]);
+    growthCopy.append(commandEnding);
+
+    const growthPrelude = document.createElement("div");
+    growthPrelude.className = "growth-prelude";
+    growthPrelude.setAttribute("aria-hidden", "true");
+    const preludeCommand = growthCommand.cloneNode(true);
+    preludeCommand.removeAttribute("id");
+    preludeCommand.querySelector("#growth-copy")?.removeAttribute("id");
+    growthPrelude.append(preludeCommand);
+    document.body.append(growthPrelude);
+    const preludePhrases = [...preludeCommand.querySelectorAll(".command-phrase")];
+    const preludeName = preludeCommand.querySelector(".command-name");
+    const preludeCaret = preludeCommand.querySelector(".command-caret");
+    let pianoProgress = 0;
+
+    const fillCharacters = (phraseElement, text) => {
+      phraseElement.replaceChildren(...Array.from(text, (character) => {
+        const span = document.createElement("span");
+        span.className = "command-char";
+        span.textContent = character;
+        return span;
+      }));
+    };
+
+    const getPreludeCharacters = () => [...preludeCommand.querySelectorAll(".command-char")];
+    const renderPiano = () => {
+      const characters = getPreludeCharacters();
+      const count = Math.max(1, characters.length);
+      const overlap = 0.46;
+      const keyLength = 1 / (1 + (count - 1) * overlap);
+      const keyOffset = keyLength * overlap;
+      const pianoEase = gsap.parseEase("back.out(1.7)");
+
+      characters.forEach((character, characterIndex) => {
+        const localProgress = clamp((pianoProgress - characterIndex * keyOffset) / keyLength, 0, 1);
+        gsap.set(character, {
+          autoAlpha: localProgress,
+          scale: 0.7 + pianoEase(localProgress) * 0.3,
+          transformOrigin: "center bottom",
+        });
+      });
+      gsap.set(preludeCaret, { autoAlpha: pianoProgress > 0.965 ? 1 : 0 });
+    };
+
+    const rebuildCommand = (item, index) => {
+      selected = { item, index };
+      const phraseSets = {
+        3: ["我想", "体验", "我喜欢的短剧", "...."],
+        4: ["我想", "续写", "我喜欢的小说", "...."],
+        5: ["我想", "为我的OC", "打造完整的世界", "...."],
+      };
+      const phrases = phraseSets[index] || [item.title, "", "", "...."];
+      phrases.forEach((phrase, phraseIndex) => {
+        fillCharacters(commandPhrases[phraseIndex], phrase);
+        fillCharacters(preludePhrases[phraseIndex], phrase);
+      });
+      growthChapter.dataset.selection = String(index);
+      renderPiano();
+    };
+
+    rebuildCommand(selected.item, selected.index);
+    orbit.onSelect((item, index, piece) => {
+      rebuildCommand(item, index);
+      document.querySelectorAll(".orbit-piece.is-selected").forEach((element) => element.classList.toggle("is-selected", Number(element.dataset.itemIndex) === index));
+      gsap.fromTo(piece, { filter: "brightness(1.18)" }, { filter: "brightness(1)", duration: 0.7, ease: "power2.out", overwrite: true });
+    });
+
+    const mm = gsap.matchMedia();
+    mm.add({ desktop: "(min-width: 861px)", mobile: "(max-width: 860px)", reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
+      const { desktop, reduce } = context.conditions;
+      if (reduce) {
+        gsap.set([".growth-command", ".growth-aura"], { autoAlpha: 1, clearProps: "transform" });
+        gsap.set([".command-name", ".command-char", ".command-caret"], { autoAlpha: 1, y: 0, scale: 1 });
+        gsap.set(growthPrelude, { autoAlpha: 0 });
+        orbit.setExitProgress(0);
+        return;
+      }
+
+      const exitTimeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: librarySequence,
+          start: () => `bottom bottom+=${Math.round(window.innerHeight * 0.92)}`,
+          end: "bottom bottom",
+          scrub: 0.62,
+          invalidateOnRefresh: true,
+          onUpdate(self) {
+            orbit.setExitProgress(self.progress);
           },
-        }, 0.14)
-        .to({}, {
-          duration: 1.8,
-          onUpdate() {
-            orbit?.setPosition(this.progress() * (artItems.length - 1));
+        },
+      });
+      exitTimeline
+        .fromTo(".product-sidebar", { xPercent: 0 }, { xPercent: -102, duration: 0.62, ease: "power3.in", immediateRender: false }, 0)
+        .fromTo(".library-intro", { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: desktop ? -130 : -72, duration: 0.54, ease: "power2.in", immediateRender: false }, 0.04)
+        .fromTo([".orbit-hud", ".orbit-guide"], { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -36, duration: 0.34, immediateRender: false }, 0.08)
+        .fromTo(".page-progress", { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.3, immediateRender: false }, 0.48)
+        .fromTo(libraryStageElement, { backgroundColor: "#f7f4ec" }, { backgroundColor: "#171511", duration: 0.72, immediateRender: false }, 0.28);
+
+      gsap.set(growthCommand, { autoAlpha: 0 });
+      gsap.set(preludeName, { autoAlpha: 1, y: 0 });
+      gsap.set(getPreludeCharacters(), { autoAlpha: 0, y: 0, scale: 0.7, transformOrigin: "center bottom" });
+      gsap.set(preludeCaret, { autoAlpha: 0 });
+      gsap.set(".growth-aura", { autoAlpha: 0, scaleX: 0.3 });
+      const pianoState = { progress: 0 };
+
+      const growthTimeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: growthChapter,
+          start: "top bottom",
+          end: "top top",
+          scrub: 0.38,
+          invalidateOnRefresh: true,
+          onEnter() {
+            document.documentElement.classList.add("is-growth-prelude");
+            gsap.set(growthPrelude, { autoAlpha: 1 });
+            gsap.set(growthCommand, { autoAlpha: 0 });
           },
-        }, 0.58);
+          onLeave() {
+            document.documentElement.classList.remove("is-growth-prelude");
+            pianoProgress = 1;
+            gsap.set(growthCommand.querySelectorAll(".command-char"), { autoAlpha: 1, scale: 1 });
+            gsap.set(growthCommand, { autoAlpha: 1 });
+            gsap.set(growthPrelude, { autoAlpha: 0 });
+          },
+          onEnterBack() {
+            document.documentElement.classList.add("is-growth-prelude");
+            gsap.set(growthCommand, { autoAlpha: 0 });
+            gsap.set(growthPrelude, { autoAlpha: 1 });
+          },
+          onLeaveBack() {
+            document.documentElement.classList.remove("is-growth-prelude");
+            gsap.set(growthPrelude, { autoAlpha: 0 });
+          },
+        },
+      });
+      growthTimeline
+        .addLabel("invoke", 0)
+        .to(pianoState, {
+          progress: 1,
+          duration: 1,
+          onUpdate() {
+            pianoProgress = pianoState.progress;
+            renderPiano();
+          },
+        }, "invoke")
+        .to({}, { duration: 0.08 });
+    });
+  }
+
+  function initAgentGrowthTransition() {
+    const growthChapter = document.querySelector(".growth-chapter");
+    const transitionSection = document.querySelector(".agent-growth-transition");
+    const transitionStage = document.querySelector(".agent-growth-stage");
+    const sourceFrame = document.querySelector(".agent-growth-source-frame");
+    const blueprint = document.querySelector(".agent-growth-blueprint");
+    const veil = document.querySelector(".agent-growth-veil");
+    const destination = document.querySelector(".agent-growth-destination");
+    const productWindow = document.querySelector(".growth-product-window");
+    const windowSource = document.querySelector(".growth-window-source");
+    const windowFinal = document.querySelector(".growth-window-final");
+    const destinationCopy = [...document.querySelectorAll(".growth-product-heading, .growth-product-copy, .growth-product-nav, .growth-product-detail, .growth-product-composition figcaption")];
+    const heading = document.querySelector(".agent-growth-heading");
+    const progressCard = document.querySelector(".growth-progress-card");
+    const progressName = progressCard?.querySelector(".growth-progress-name");
+    const progressValue = document.getElementById("agent-growth-value");
+    const commandName = growthChapter.querySelector(".command-name");
+    const commandSlash = growthChapter.querySelector(".command-slash");
+    const commandGrowthWord = growthChapter.querySelector(".command-growth-word");
+    const commandCopy = growthChapter.querySelector(".command-copy");
+    const commandCaret = growthChapter.querySelector(".command-caret");
+    const growthAura = growthChapter.querySelector(".growth-aura");
+    const fixedCommandGrowthWord = document.querySelector(".growth-prelude .command-growth-word");
+    const orbitDecoration = document.querySelector(".growth-progress-orbit");
+    const traces = [...document.querySelectorAll(".growth-progress-traces i")];
+    const index = document.querySelector(".agent-growth-index");
+    if (!growthChapter || !transitionSection || !transitionStage || !sourceFrame || !blueprint || !veil || !destination || !productWindow || !windowSource || !windowFinal || !heading || !progressCard || !progressName || !progressValue || !commandName || !commandGrowthWord) return;
+
+    const sharedName = document.createElement("span");
+    sharedName.className = "growth-shared-name";
+    sharedName.setAttribute("aria-hidden", "true");
+    sharedName.innerHTML = "<b>Growth</b>";
+    document.body.append(sharedName);
+
+    document.body.append(progressCard);
+
+    const contextBackdrop = document.createElement("div");
+    contextBackdrop.className = "agent-growth-context";
+    contextBackdrop.setAttribute("aria-hidden", "true");
+    const sidebarGhost = document.querySelector(".product-sidebar")?.cloneNode(true);
+    if (sidebarGhost) {
+      [sidebarGhost, ...sidebarGhost.querySelectorAll("*")].forEach((element) => element.removeAttribute("style"));
+      sidebarGhost.className = "growth-sidebar-ghost";
+      sidebarGhost.removeAttribute("aria-label");
+      contextBackdrop.append(sidebarGhost);
+    }
+    document.body.append(contextBackdrop);
+
+    const progressState = { value: 0, fill: 0 };
+
+    const renderProgress = () => {
+      const value = clamp(progressState.value, 0, 100);
+      const rounded = Math.round(value);
+      progressValue.textContent = String(rounded).padStart(2, "0");
+      progressCard.style.setProperty("--growth-progress", `${clamp(progressState.fill, 0, 100)}%`);
+    };
+
+    const getBlueprintGeometry = () => {
+      const stageRect = sourceFrame.getBoundingClientRect();
+      const imageRatio = 1672 / 941;
+      const stageRatio = stageRect.width / Math.max(1, stageRect.height);
+      const renderedWidth = stageRatio > imageRatio ? stageRect.height * imageRatio : stageRect.width;
+      const renderedHeight = stageRatio > imageRatio ? stageRect.height : stageRect.width / imageRatio;
+      const imageLeft = (stageRect.width - renderedWidth) / 2;
+      const imageTop = (stageRect.height - renderedHeight) / 2;
+      // Target is the Growth progress panel in the storyboard's middle column.
+      const target = { x: 500 / 1672, y: 240 / 941, width: 255 / 1672, height: 136 / 941 };
+      return {
+        x: imageLeft + renderedWidth * (target.x + target.width / 2),
+        y: imageTop + renderedHeight * (target.y + target.height / 2),
+        width: renderedWidth * target.width,
+        height: renderedHeight * target.height,
+      };
+    };
+
+    const getWindowGeometry = () => {
+      const stageRect = transitionStage.getBoundingClientRect();
+      const targetRect = productWindow.getBoundingClientRect();
+      return {
+        left: targetRect.left - stageRect.left,
+        top: targetRect.top - stageRect.top,
+        width: targetRect.width,
+        height: targetRect.height,
+      };
+    };
+
+    const getCommandGeometry = () => {
+      const sourceRect = (fixedCommandGrowthWord || commandGrowthWord).getBoundingClientRect();
+      const sharedRect = sharedName.getBoundingClientRect();
+      return {
+        x: sourceRect.left,
+        y: sourceRect.top,
+        scale: sourceRect.width / Math.max(1, sharedRect.width),
+      };
+    };
+
+    const getProgressNameGeometry = () => {
+      let localX = 0;
+      let localY = 0;
+      let element = progressName;
+      while (element && element !== progressCard) {
+        localX += element.offsetLeft;
+        localY += element.offsetTop;
+        element = element.offsetParent;
+      }
+      const sharedRect = sharedName.getBoundingClientRect();
+      return {
+        x: window.innerWidth / 2 - progressCard.offsetWidth / 2 + localX,
+        y: window.innerHeight / 2 - progressCard.offsetHeight / 2 + localY,
+        scale: progressName.offsetWidth / Math.max(1, sharedRect.width),
+      };
+    };
+
+    renderProgress();
+    const mm = gsap.matchMedia();
+    mm.add({ desktop: "(min-width: 861px)", mobile: "(max-width: 860px)", reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
+      const { desktop, reduce } = context.conditions;
+      if (reduce) {
+        progressState.value = 68;
+        progressState.fill = 100;
+        renderProgress();
+        gsap.set(sourceFrame, { autoAlpha: 0 });
+        gsap.set(destination, { autoAlpha: 1 });
+        gsap.set(windowSource, { autoAlpha: 0 });
+        gsap.set(windowFinal, { autoAlpha: 1 });
+        gsap.set(veil, { autoAlpha: 0 });
+        gsap.set([heading, orbitDecoration, traces, index], { autoAlpha: 0 });
+        gsap.set(progressCard, { autoAlpha: 0 });
+        gsap.set(sharedName, { autoAlpha: 0 });
+        gsap.set(contextBackdrop, { autoAlpha: 1 });
+        return;
+      }
+
+      gsap.set(sourceFrame, { inset: 0, autoAlpha: 1, borderRadius: 0, boxShadow: "0 0 0 rgba(62,44,25,0)", filter: "blur(12px) saturate(.72) contrast(.92) brightness(.72)" });
+      gsap.set(blueprint, { autoAlpha: 1 });
+      gsap.set(destination, { autoAlpha: 0 });
+      gsap.set(destinationCopy, { autoAlpha: 0, y: 14 });
+      gsap.set(windowSource, { autoAlpha: 1 });
+      gsap.set(windowFinal, { autoAlpha: 0 });
+      gsap.set(veil, { autoAlpha: 1 });
+      gsap.set(heading, { autoAlpha: 0, y: 28 });
+      gsap.set(progressCard, {
+        autoAlpha: 0,
+        x: () => -progressCard.offsetWidth / 2,
+        y: () => -progressCard.offsetHeight / 2,
+        scale: 1,
+      });
+      gsap.set(contextBackdrop, { autoAlpha: 0 });
+      gsap.set(progressName, { autoAlpha: 0 });
+      gsap.set(sharedName, { autoAlpha: 0, color: "#ecd4a3", textShadow: "0 0 16px rgba(236, 212, 163, 0.32), 0 0 48px rgba(201, 165, 106, 0.2)" });
+      gsap.set(orbitDecoration, { autoAlpha: 0, scale: 0.72, rotation: -12 });
+      gsap.set(traces, { autoAlpha: 0, scaleY: 0 });
+      gsap.set(index, { autoAlpha: 0, x: 12 });
+
+      const enterTimeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: transitionSection,
+          start: "top bottom",
+          end: "top top",
+          scrub: 0.65,
+          invalidateOnRefresh: true,
+        },
+      });
+      enterTimeline
+        .fromTo([commandSlash, commandCopy, commandCaret], { autoAlpha: 1 }, { autoAlpha: 0, duration: .3, ease: "power2.in", immediateRender: false }, 0)
+        .fromTo(growthAura, { autoAlpha: 1 }, { autoAlpha: 0, duration: .36, immediateRender: false }, 0)
+        .to(contextBackdrop, { autoAlpha: 1, duration: .5, ease: "power2.inOut" }, .05)
+        .to(veil, { autoAlpha: .08, duration: .5, ease: "power2.inOut" }, .05)
+        .fromTo(sharedName, {
+          autoAlpha: 0,
+          x: () => getCommandGeometry().x,
+          y: () => getCommandGeometry().y,
+          scale: () => getCommandGeometry().scale,
+        }, {
+          autoAlpha: 1,
+          duration: .06,
+          immediateRender: false,
+        }, 0)
+        .fromTo(commandGrowthWord, { autoAlpha: 1 }, { autoAlpha: 0, duration: .06, immediateRender: false }, 0)
+        .to(progressCard, { autoAlpha: 1, duration: .4, ease: "power2.out" }, .16)
+        .to(sharedName, {
+          x: () => getProgressNameGeometry().x,
+          y: () => getProgressNameGeometry().y,
+          duration: .5,
+          ease: "power3.inOut",
+        }, .12)
+        .to(sharedName, {
+          scale: () => getProgressNameGeometry().scale,
+          color: "#b57b22",
+          textShadow: "0 0 0 rgba(0,0,0,0)",
+          duration: .3,
+          ease: "power3.inOut",
+        }, .12)
+        .to(progressName, { autoAlpha: 1, duration: .07 }, .61)
+        .to(sharedName, { autoAlpha: 0, duration: .09 }, .61)
+        .to({}, { duration: .12 });
+
+      const growthTimeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: transitionSection,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.8,
+          invalidateOnRefresh: true,
+          onUpdate: renderProgress,
+        },
+      });
+
+      growthTimeline
+        .to(heading, { autoAlpha: 1, y: 0, duration: .08, ease: "power2.out" }, 0)
+        .to(orbitDecoration, { autoAlpha: 1, scale: 1, rotation: 0, duration: .1, ease: "power2.out" }, 0)
+        .to(traces, { autoAlpha: .7, scaleY: 1, stagger: .012, duration: .08, ease: "power2.out" }, .01)
+        .to(index, { autoAlpha: 1, x: 0, duration: .07 }, .02)
+        .to(progressState, { value: 14, fill: 20, duration: .14, onUpdate: renderProgress }, 0)
+        .to(orbitDecoration, { rotation: 54, scale: 1.06, duration: .32 }, 0)
+        .to(progressState, { value: 31, fill: 46, duration: .16, onUpdate: renderProgress }, .14)
+        .to(traces, { rotation: (traceIndex) => traceIndex % 2 ? -8 : 8, stagger: .025, duration: .16 }, .14)
+        .to(progressState, { value: 49, fill: 72, duration: .18, onUpdate: renderProgress }, .3)
+        .to(progressCard, { scale: 1.025, duration: .1, ease: "power2.out" }, .31)
+        .to(progressCard, { scale: 1, duration: .09, ease: "power2.in" }, .41)
+        .to(progressState, { value: 60, fill: 88, duration: .1, onUpdate: renderProgress }, .48)
+        .to(progressState, { value: 68, fill: 100, duration: .1, onUpdate: renderProgress }, .58)
+        .to(heading, { autoAlpha: 0, y: -48, duration: .14 }, .54)
+        .to([orbitDecoration, traces, index], { autoAlpha: 0, duration: .14 }, .54)
+        .to(contextBackdrop, { autoAlpha: 0, duration: .22 }, .54)
+        .to(veil, { autoAlpha: 0, duration: .2 }, .56)
+        .to(sourceFrame, { filter: "blur(0px) saturate(1) contrast(1) brightness(1)", duration: .18, ease: "power2.out" }, .56)
+        .to(progressCard, {
+          x: () => getBlueprintGeometry().x - window.innerWidth / 2 - progressCard.offsetWidth / 2,
+          y: () => getBlueprintGeometry().y - window.innerHeight / 2 - progressCard.offsetHeight / 2,
+          scaleX: () => getBlueprintGeometry().width / Math.max(1, progressCard.offsetWidth),
+          scaleY: () => getBlueprintGeometry().height / Math.max(1, progressCard.offsetHeight),
+          autoAlpha: .92,
+          duration: .16,
+          ease: "power3.inOut",
+        }, .6)
+        .to(progressCard, { autoAlpha: 0, duration: .035 }, .755)
+        .to(destination, { autoAlpha: 1, duration: .18, ease: "power2.inOut" }, .7)
+        .to(sourceFrame, {
+          inset: () => {
+            const target = getWindowGeometry();
+            return `${target.top}px ${window.innerWidth - target.left - target.width}px ${window.innerHeight - target.top - target.height}px ${target.left}px`;
+          },
+          borderRadius: 4,
+          boxShadow: "0 28px 70px rgba(62,44,25,.15)",
+          duration: .2,
+          ease: "power3.inOut",
+        }, .72)
+        .to(destinationCopy, { autoAlpha: 1, y: 0, stagger: .012, duration: .12, ease: "power2.out" }, .78)
+        .to(sourceFrame, { autoAlpha: 0, duration: .025 }, .915)
+        .to(windowFinal, { autoAlpha: 1, duration: .12, ease: "power2.inOut" }, .91)
+        .to(windowSource, { autoAlpha: 0, duration: .12, ease: "power2.inOut" }, .91)
+        .to({}, { duration: .08 });
     });
   }
 
@@ -655,6 +1154,8 @@
   initOcAnimation();
   const orbit = initOrbit();
   initScrollStory(orbit);
+  initGrowthHandoff(orbit);
+  initAgentGrowthTransition();
   window.addEventListener("load", () => {
     orbit?.render();
     ScrollTrigger.refresh();
