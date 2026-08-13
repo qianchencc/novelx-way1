@@ -9,3 +9,5 @@ previews/
 videos/
 novelx-showcase-video/
 novelx-single.html
+.verify-chrome/
+_site/

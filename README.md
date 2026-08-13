@@ -16,6 +16,15 @@ python3 -m http.server 8765
 
 Then open `http://localhost:8765/`.
 
+## Deployment
+
+GitHub Pages publishes the current redesign automatically after every push to
+`main`. The deployed `/` route uses `redesign-v2.html`; the previous prototype
+remains available at `/legacy.html`.
+
+The intended custom domain is `novelx.qianc.ltd`. Configure its DNS as a CNAME
+to `qianchencc.github.io` after the Pages site has been enabled.
+
 ## Assets
 
 The current four-scene page uses the user-supplied studio background, NovelX workbench composition, and logo. No new image was generated for this revision and no API credential is stored in this directory.

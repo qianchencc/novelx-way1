@@ -1150,30 +1150,27 @@
       };
     };
 
+    const getSharedNameBaseWidth = () => {
+      const currentScale = gsap.getProperty(sharedName, "scale") || 1;
+      return sharedName.getBoundingClientRect().width / currentScale;
+    };
+
     const getCommandGeometry = () => {
-      const sourceRect = (fixedCommandGrowthWord || commandGrowthWord).getBoundingClientRect();
-      const sharedRect = sharedName.getBoundingClientRect();
+      const source = fixedCommandGrowthWord || commandGrowthWord;
+      const sourceRect = source.getBoundingClientRect();
       return {
         x: sourceRect.left,
         y: sourceRect.top,
-        scale: sourceRect.width / Math.max(1, sharedRect.width),
+        scale: sourceRect.width / Math.max(1, getSharedNameBaseWidth()),
       };
     };
 
     const getProgressNameGeometry = () => {
-      let localX = 0;
-      let localY = 0;
-      let element = progressName;
-      while (element && element !== progressCard) {
-        localX += element.offsetLeft;
-        localY += element.offsetTop;
-        element = element.offsetParent;
-      }
-      const sharedRect = sharedName.getBoundingClientRect();
+      const targetRect = progressName.getBoundingClientRect();
       return {
-        x: window.innerWidth / 2 - progressCard.offsetWidth / 2 + localX,
-        y: window.innerHeight / 2 - progressCard.offsetHeight / 2 + localY,
-        scale: progressName.offsetWidth / Math.max(1, sharedRect.width),
+        x: targetRect.left,
+        y: targetRect.top,
+        scale: targetRect.width / Math.max(1, getSharedNameBaseWidth()),
       };
     };
 
@@ -1244,6 +1241,19 @@
           end: "top top",
           scrub: 0.65,
           invalidateOnRefresh: true,
+          onEnter() {
+            document.documentElement.classList.add("is-growth-handoff");
+          },
+          onEnterBack() {
+            document.documentElement.classList.add("is-growth-handoff");
+          },
+          onLeave() {
+            document.documentElement.classList.remove("is-growth-handoff");
+          },
+          onLeaveBack(self) {
+            document.documentElement.classList.remove("is-growth-handoff");
+            self.animation.progress(0);
+          },
         },
       });
       enterTimeline
@@ -1255,9 +1265,14 @@
           x: () => getCommandGeometry().x,
           y: () => getCommandGeometry().y,
           scale: () => getCommandGeometry().scale,
-          autoAlpha: 1,
         }, "captureGrowth")
-        .set([commandGrowthWord, fixedCommandGrowthWord].filter(Boolean), { autoAlpha: 0 }, "captureGrowth")
+        .fromTo(sharedName, { autoAlpha: 0 }, { autoAlpha: 1, duration: .001, immediateRender: true }, "captureGrowth")
+        .fromTo(
+          [commandGrowthWord, fixedCommandGrowthWord].filter(Boolean),
+          { autoAlpha: 1 },
+          { autoAlpha: 0, duration: .001, immediateRender: false },
+          "captureGrowth",
+        )
         .fromTo(handoffBackdrop, { autoAlpha: 0 }, { autoAlpha: 1, duration: .08, immediateRender: false }, "clearCopy")
         .to([commandSlash, commandCopy, commandCaret, fixedCommandSlash, fixedCommandCopy, fixedCommandCaret].filter(Boolean), { autoAlpha: 0, duration: .3, ease: "power2.in" }, "clearCopy")
         .fromTo(growthAura, { autoAlpha: 1 }, { autoAlpha: 0, duration: .32, immediateRender: false }, "clearCopy")
@@ -1573,6 +1588,133 @@
     });
   }
 
+  function initInspirationLibrary() {
+    const sequence = document.querySelector(".inspiration-sequence");
+    const stage = document.querySelector(".inspiration-stage");
+    const heading = document.querySelector(".inspiration-heading");
+    const keywords = [...document.querySelectorAll(".inspiration-keyword")];
+    const bubbles = [...document.querySelectorAll(".idea-bubble")];
+    const debris = [...document.querySelectorAll(".inspiration-debris > span")];
+    const impactRings = [...document.querySelectorAll(".inspiration-impact i")];
+    const ocArtwork = document.querySelector(".oc-showcase-artwork");
+    const ocIndex = document.querySelector(".oc-showcase-index");
+    if (!sequence || !stage || !heading || keywords.length !== 2 || !bubbles.length) return;
+
+    keywords.forEach((keyword) => {
+      const word = keyword.dataset.word || "";
+      const clips = [
+        "inset(0 0 82% 0)",
+        "inset(17% 0 64% 0)",
+        "inset(35% 0 46% 0)",
+        "inset(53% 0 29% 0)",
+        "inset(70% 0 13% 0)",
+        "inset(86% 0 0 0)",
+      ];
+      clips.forEach((clip, index) => {
+        const shard = document.createElement("span");
+        shard.className = "keyword-shard";
+        shard.textContent = word;
+        shard.dataset.shard = String(index);
+        shard.style.clipPath = clip;
+        keyword.append(shard);
+      });
+    });
+
+    const cores = [...document.querySelectorAll(".keyword-core")];
+    const shards = [...document.querySelectorAll(".keyword-shard")];
+    const mm = gsap.matchMedia();
+    mm.add({ motion: "(prefers-reduced-motion: no-preference)", reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
+      const { reduce } = context.conditions;
+      if (reduce) {
+        gsap.set(cores, { autoAlpha: .08 });
+        gsap.set(shards, { autoAlpha: 0 });
+        gsap.set(bubbles, { autoAlpha: 1, y: 0, xPercent: -50, yPercent: -50 });
+        return;
+      }
+
+      const visibleBubbles = bubbles.filter((bubble) => getComputedStyle(bubble).display !== "none");
+      gsap.set(stage, { autoAlpha: 1 });
+      gsap.set(heading, { autoAlpha: 0, y: 12 });
+      gsap.set(cores, { autoAlpha: 1 });
+      gsap.set(shards, { autoAlpha: 0, x: 0, y: 0, rotation: 0 });
+      gsap.set(impactRings, { autoAlpha: 0, width: 1, height: 1 });
+      gsap.set(debris, { autoAlpha: 0, scale: .45 });
+      visibleBubbles.forEach((bubble, index) => {
+        gsap.set(bubble, {
+          autoAlpha: 0,
+          xPercent: -50,
+          yPercent: -50,
+          y: () => window.innerHeight * (.92 + (index % 4) * .15),
+          rotation: index % 2 ? 9 : -8,
+          scale: .72,
+        });
+      });
+
+      if (ocArtwork) {
+        gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: sequence,
+            start: "top bottom",
+            end: "top top",
+            scrub: .65,
+            invalidateOnRefresh: true,
+          },
+        })
+          .to(ocArtwork, { yPercent: -18, scale: .95, autoAlpha: .12, duration: 1 }, 0)
+          .to(ocIndex, { autoAlpha: 0, duration: .45 }, 0)
+          .fromTo(stage, { autoAlpha: .22 }, { autoAlpha: 1, duration: 1, immediateRender: false }, 0);
+      }
+
+      const timeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: sequence,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: .9,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      timeline
+        .addLabel("words", 0)
+        .addLabel("impact", .18)
+        .addLabel("break", .31)
+        .addLabel("scatter", .48)
+        .addLabel("field", .72)
+        .to(heading, { autoAlpha: 1, y: 0, duration: .1, ease: "power2.out" }, "words")
+        .fromTo(keywords[0], { xPercent: -5, autoAlpha: .35 }, { xPercent: 0, autoAlpha: 1, duration: .15, ease: "power2.out", immediateRender: false }, "words")
+        .fromTo(keywords[1], { xPercent: 5, autoAlpha: .35 }, { xPercent: 0, autoAlpha: 1, duration: .15, ease: "power2.out", immediateRender: false }, "words+=.03")
+        .to(visibleBubbles, {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          rotation: (index, bubble) => Number.parseFloat(getComputedStyle(bubble).getPropertyValue("--r")) || 0,
+          duration: .34,
+          stagger: .018,
+          ease: "power3.out",
+        }, "impact")
+        .to(impactRings, { autoAlpha: .65, width: (index) => 180 + index * 150, height: (index) => 180 + index * 150, stagger: .035, duration: .24, ease: "power2.out" }, "impact+=.07")
+        .to(impactRings, { autoAlpha: 0, duration: .16 }, "break")
+        .to(cores, { autoAlpha: 0, scaleY: 1.06, duration: .12, ease: "power2.in" }, "break")
+        .set(shards, { autoAlpha: 1 }, "break")
+        .to(shards, {
+          x: (index) => ((index % 6) - 2.5) * (window.innerWidth < 861 ? 12 : 28) + (index < 6 ? -24 : 24),
+          y: (index) => ((index % 3) - 1) * (window.innerWidth < 861 ? 34 : 58) + (index % 2 ? -22 : 26),
+          rotation: (index) => (index % 2 ? 1 : -1) * (4 + (index % 5) * 2.2),
+          autoAlpha: .16,
+          duration: .24,
+          stagger: .008,
+          ease: "power3.out",
+        }, "break")
+        .to(debris, { autoAlpha: .78, scale: 1, stagger: .018, duration: .2, ease: "power2.out" }, "scatter")
+        .to(shards, { y: "-=18", autoAlpha: .09, duration: .34 }, "scatter")
+        .to(visibleBubbles, { y: (index) => index % 2 ? -8 : 7, duration: .26, stagger: .008, ease: "power1.inOut" }, "field")
+        .to({}, { duration: .2 });
+    });
+  }
+
   function initOpeningMotion() {
     const journeyCue = document.querySelector(".journey-cue");
     const journeyLine = document.querySelector(".journey-line");
@@ -1639,6 +1781,7 @@
   initAgentGrowthTransition();
   initAtlasInteraction();
   initOcShowcase();
+  initInspirationLibrary();
   window.addEventListener("load", () => {
     orbit?.render();
     ScrollTrigger.refresh();
