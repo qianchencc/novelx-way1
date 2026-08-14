@@ -1715,6 +1715,268 @@
     });
   }
 
+  function initHeritageLoop() {
+    const sequence = document.querySelector(".heritage-sequence");
+    const stage = document.querySelector(".heritage-stage");
+    const paper = document.querySelector(".heritage-paper");
+    const intro = document.querySelector(".heritage-intro");
+    const product = document.querySelector(".heritage-product");
+    const productImage = product?.querySelector("img");
+    const cards = [...document.querySelectorAll(".heritage-card")];
+    const steps = document.querySelector(".heritage-steps");
+    const index = document.querySelector(".heritage-index");
+    const sharedPearl = document.querySelector(".heritage-pearl-shared");
+    const loop = document.querySelector(".heritage-loop");
+    const loopScene = document.querySelector(".heritage-loop-scene");
+    const loopShade = document.querySelector(".heritage-loop-shade");
+    const loopBird = document.querySelector(".heritage-loop-bird");
+    const loopLogo = document.querySelector(".heritage-loop-logo");
+    const loopCopy = document.querySelector(".heritage-loop-copy");
+    const loopIndex = document.querySelector(".heritage-loop-index");
+    const returnControl = document.querySelector(".heritage-return");
+    const returnLine = returnControl?.querySelector(".closing-return-line");
+    const returnDrop = returnControl?.querySelector(".closing-return-drop");
+    const returnChevron = returnControl?.querySelector(".closing-return-chevron");
+    const returnOrnaments = [...(returnControl?.querySelectorAll(".closing-return-ornament") || [])];
+    const inspirationStage = document.querySelector(".inspiration-stage");
+    const inspirationPieces = [...document.querySelectorAll(".idea-bubble, .inspiration-heading, .inspiration-debris > span, .keyword-shard")];
+    if (!sequence || !stage || !paper || !intro || !product || !productImage || cards.length !== 3 || !steps || !sharedPearl || !loop || !loopScene) return;
+
+    const mm = gsap.matchMedia();
+    mm.add({ motion: "(prefers-reduced-motion: no-preference)", reduce: "(prefers-reduced-motion: reduce)" }, (context) => {
+      const { reduce } = context.conditions;
+      if (reduce) {
+        gsap.set(loop, { autoAlpha: 1 });
+        gsap.set([loopScene, loopShade, loopBird, loopLogo, loopCopy, loopIndex, returnControl].filter(Boolean), { autoAlpha: 1 });
+        return;
+      }
+
+      const sharedPearlImage = sharedPearl.querySelector("img");
+      const getPearlStart = () => {
+        const productWidth = productImage.offsetWidth;
+        const productHeight = productImage.offsetHeight;
+        return {
+          x: product.offsetLeft + productImage.offsetLeft + productWidth * .192,
+          y: product.offsetTop + productImage.offsetTop + productHeight * .578,
+          width: productWidth * .143,
+          height: productHeight * .137,
+        };
+      };
+      const getCardPose = (cardIndex) => {
+        const mobile = window.innerWidth < 861;
+        const poses = mobile
+          ? [
+              { x: 0, y: window.innerHeight * .43, rotation: -5.5 },
+              { x: window.innerWidth * .19, y: window.innerHeight * .5, rotation: 5 },
+              { x: window.innerWidth * .07, y: window.innerHeight * .59, rotation: -1.8 },
+            ]
+          : [
+              { x: 34, y: window.innerHeight * .37, rotation: -6.5 },
+              { x: Math.min(window.innerWidth * .13, 190), y: window.innerHeight * .47, rotation: 5.2 },
+              { x: Math.min(window.innerWidth * .055, 82), y: window.innerHeight * .57, rotation: -2.4 },
+            ];
+        return poses[cardIndex];
+      };
+      let activeCard = null;
+      const settleCards = (focusCard = activeCard) => {
+        cards.forEach((card, cardIndex) => {
+          const pose = getCardPose(cardIndex);
+          const focused = card === focusCard;
+          const focusIndex = focusCard ? cards.indexOf(focusCard) : -1;
+          const spread = focusCard && !focused ? (cardIndex < focusIndex ? -18 : 22) : 0;
+          card.classList.toggle("is-active", focused);
+          gsap.to(card, {
+            x: pose.x + spread,
+            y: pose.y + (focused ? -24 : 0),
+            rotation: focused ? 0 : pose.rotation,
+            rotationX: 0,
+            rotationY: 0,
+            scale: focused ? 1.045 : 1,
+            zIndex: focused ? 20 : 5 + cardIndex,
+            duration: .5,
+            ease: "back.out(1.35)",
+            overwrite: "auto",
+          });
+        });
+      };
+      const canInteract = () => sequence.classList.contains("is-card-deck-ready");
+      cards.forEach((card) => {
+        const focusCard = () => { if (canInteract()) settleCards(card); };
+        card.addEventListener("pointerenter", focusCard);
+        card.addEventListener("focus", focusCard);
+        card.addEventListener("pointermove", (event) => {
+          if (!canInteract() || (activeCard && activeCard !== card)) return;
+          const rect = card.getBoundingClientRect();
+          const nx = clamp((event.clientX - rect.left) / Math.max(1, rect.width), 0, 1) - .5;
+          const ny = clamp((event.clientY - rect.top) / Math.max(1, rect.height), 0, 1) - .5;
+          gsap.to(card, { rotationY: nx * 6, rotationX: ny * -5, duration: .22, ease: "power2.out", overwrite: "auto" });
+        });
+        card.addEventListener("pointerleave", () => settleCards());
+        card.addEventListener("blur", () => settleCards());
+        card.addEventListener("click", () => {
+          if (!canInteract()) return;
+          activeCard = activeCard === card ? null : card;
+          settleCards();
+        });
+      });
+      const getPearlTarget = () => {
+        const sourceWidth = 1672;
+        const sourceHeight = 941;
+        const scale = Math.max(window.innerWidth / sourceWidth, window.innerHeight / sourceHeight);
+        const renderedWidth = sourceWidth * scale;
+        const renderedHeight = sourceHeight * scale;
+        const cropX = (window.innerWidth - renderedWidth) / 2;
+        const cropY = (window.innerHeight - renderedHeight) / 2;
+        const mobile = window.innerWidth < 861;
+        const sourceRect = mobile
+          ? { x: 1200, y: 470, width: 472, height: 326 }
+          : { x: 1207, y: 472, width: 465, height: 326 };
+        const x = cropX + sourceRect.x * scale;
+        const y = cropY + sourceRect.y * scale;
+        return {
+          x,
+          y,
+          width: sourceRect.width * scale,
+          height: sourceRect.height * scale,
+        };
+      };
+
+      gsap.set([intro, product, steps, index], { autoAlpha: 0 });
+      gsap.set(intro, { x: -28 });
+      gsap.set(product, { xPercent: 8, scale: .975 });
+      gsap.set(steps, { y: 12 });
+      gsap.set(cards, { autoAlpha: 0, x: 0, y: () => window.innerHeight * 1.18, rotation: (cardIndex) => [-8, 7, -4][cardIndex], scale: .92 });
+      gsap.set(sharedPearl, {
+        autoAlpha: 0,
+        x: () => getPearlStart().x,
+        y: () => getPearlStart().y,
+        width: () => getPearlStart().width,
+        height: () => getPearlStart().height,
+        scaleX: 1,
+        scaleY: 1,
+      });
+      gsap.set(sharedPearlImage, { scale: 1, xPercent: 0, yPercent: 0 });
+      gsap.set(loop, { autoAlpha: 0 });
+      gsap.set(loopScene, { autoAlpha: 1, scale: 1.025 });
+      gsap.set([loopShade, loopBird, loopLogo, loopCopy, loopIndex, returnControl].filter(Boolean), { autoAlpha: 0 });
+
+      if (inspirationStage) {
+        gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: sequence,
+            start: "top bottom",
+            end: "top top",
+            scrub: .7,
+            invalidateOnRefresh: true,
+          },
+        })
+          .to(inspirationPieces, { y: (pieceIndex) => -window.innerHeight * (.18 + (pieceIndex % 5) * .045), autoAlpha: 0, stagger: .003, duration: .78 }, 0)
+          .to(inspirationStage, { autoAlpha: .08, duration: 1 }, 0)
+          .fromTo(stage, { autoAlpha: .15 }, { autoAlpha: 1, duration: 1, immediateRender: false }, 0);
+      }
+
+      const timeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: sequence,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: .9,
+          invalidateOnRefresh: true,
+          onUpdate(self) {
+            const deckReady = self.progress > .24 && self.progress < .57;
+            sequence.classList.toggle("is-card-deck-ready", deckReady);
+            if (!deckReady) activeCard = null;
+          },
+        },
+      });
+
+      timeline
+        .addLabel("product", 0)
+        .addLabel("cards", .18)
+        .addLabel("pearl", 2.08)
+        .addLabel("handoff", 2.48)
+        .addLabel("opening", 3.42)
+        .to(product, { autoAlpha: 1, xPercent: 0, scale: 1, duration: .3, ease: "power3.out" }, "product")
+        .to(intro, { autoAlpha: 1, x: 0, duration: .24, ease: "power3.out" }, "product+=.12")
+        .to(steps, { autoAlpha: 1, y: 0, duration: .2, ease: "power2.out" }, "product+=.2")
+        .to(index, { autoAlpha: 1, duration: .18 }, "product+=.2");
+
+      cards.forEach((card, cardIndex) => {
+        const start = .25 + cardIndex * .5;
+        timeline
+          .to(card, { autoAlpha: 1, duration: .08 }, start)
+          .to(card, {
+            x: () => getCardPose(cardIndex).x,
+            y: () => getCardPose(cardIndex).y,
+            rotation: () => getCardPose(cardIndex).rotation,
+            scale: 1,
+            duration: .46,
+            ease: "power3.out",
+          }, start);
+      });
+
+      timeline
+        .to(sharedPearl, { autoAlpha: 1, duration: .12, ease: "power1.out" }, "handoff")
+        .to(cards, { autoAlpha: 0, duration: .34, stagger: .018, ease: "power1.inOut" }, "handoff+=.16")
+        .to([product, intro, steps, index], { autoAlpha: 0, duration: .42, stagger: .012, ease: "power1.inOut" }, "handoff+=.18")
+        .to(paper, { autoAlpha: 0, duration: .58, ease: "power1.inOut" }, "handoff+=.2")
+        .to(sharedBrand, { autoAlpha: 0, duration: .24, ease: "power1.inOut" }, "handoff+=.2")
+        .to(loop, { autoAlpha: 1, duration: .76, ease: "power1.inOut" }, "handoff+=.24")
+        .to(sharedPearl, {
+          x: () => getPearlTarget().x,
+          y: () => getPearlTarget().y,
+          scaleX: () => getPearlTarget().width / getPearlStart().width,
+          scaleY: () => getPearlTarget().height / getPearlStart().height,
+          duration: .94,
+          ease: "power3.inOut",
+        }, "handoff+=.14")
+        .to(sharedPearlImage, {
+          keyframes: [
+            { scale: 1.07, xPercent: 2.5, yPercent: -.5, duration: .46, ease: "power2.inOut" },
+            { scale: 1.18, xPercent: 6.5, yPercent: 0, duration: .48, ease: "power3.inOut" },
+          ],
+        }, "handoff+=.14")
+        .to(loopScene, { scale: 1.01, duration: .94, ease: "power2.inOut" }, "handoff+=.24")
+        .to(sharedPearl, { autoAlpha: 0, duration: .18, ease: "power3.out" }, "handoff+=.9")
+        .to(loopShade, { autoAlpha: 1, duration: .3 }, "opening+=.02")
+        .to([loopBird, loopLogo], { autoAlpha: 1, y: 0, duration: .24, stagger: .035, ease: "power3.out" }, "opening+=.2")
+        .fromTo(loopCopy, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: .34, ease: "power3.out", immediateRender: false }, "opening+=.27")
+        .to(loopIndex, { autoAlpha: 1, duration: .18 }, "opening+=.37")
+        .to(returnControl, { autoAlpha: 1, y: 0, duration: .28, ease: "power3.out" }, "opening+=.46")
+        .to({}, { duration: .64 });
+
+      const returnLoop = returnControl && returnLine && returnDrop && returnChevron
+        ? gsap.timeline({ repeat: -1, repeatDelay: .52 })
+          .set(returnLine, { autoAlpha: .18, scaleY: 0, transformOrigin: "center top" })
+          .set(returnDrop, { autoAlpha: 0, y: 0 })
+          .set(returnChevron, { autoAlpha: 0, y: 0 })
+          .set(returnOrnaments, { autoAlpha: 0, scale: .45, rotation: -8 })
+          .to(returnLine, { autoAlpha: 1, scaleY: 1, duration: .82, ease: "power2.inOut" }, 0)
+          .to(returnDrop, { autoAlpha: .92, duration: .16 }, .08)
+          .to(returnOrnaments, { autoAlpha: .82, scale: 1, rotation: 0, duration: .46, stagger: .09, ease: "power2.out" }, .14)
+          .to(returnDrop, { y: 43, duration: .9, ease: "power2.in" }, .1)
+          .to(returnChevron, { autoAlpha: 1, y: 4, duration: .32, ease: "power2.out" }, .64)
+          .to([returnDrop, returnChevron, returnOrnaments], { autoAlpha: 0, duration: .3 }, 1.02)
+          .to(returnLine, { autoAlpha: .18, scaleY: 0, transformOrigin: "center bottom", duration: .44 }, 1.02)
+        : null;
+
+      const onReturn = (event) => {
+        event.preventDefault();
+        history.scrollRestoration = "manual";
+        window.location.assign(`./redesign-v2.html?restart=${Date.now()}#opening`);
+      };
+      returnControl?.addEventListener("click", onReturn);
+
+      return () => {
+        returnLoop?.kill();
+        returnControl?.removeEventListener("click", onReturn);
+        sequence.classList.remove("is-card-deck-ready");
+      };
+    });
+  }
+
   function initOpeningMotion() {
     const journeyCue = document.querySelector(".journey-cue");
     const journeyLine = document.querySelector(".journey-line");
@@ -1782,6 +2044,7 @@
   initAtlasInteraction();
   initOcShowcase();
   initInspirationLibrary();
+  initHeritageLoop();
   window.addEventListener("load", () => {
     orbit?.render();
     ScrollTrigger.refresh();

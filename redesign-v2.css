@@ -1797,6 +1797,251 @@ html:not(.is-growth-handoff) .growth-shared-name {
 .inspiration-index i { width: 1px; height: 132px; background: rgba(134,101,48,.2); }
 .inspiration-index b { font-weight: 400; }
 
+/* Heritage library: the archive becomes the opening scene again. */
+.heritage-sequence {
+  position: relative;
+  min-height: 760dvh;
+  background: #f3eee3;
+}
+
+.heritage-stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  color: #332d25;
+  background: #f3eee3;
+}
+
+.heritage-paper {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .78;
+  filter: saturate(.72) contrast(.96) brightness(1.025);
+}
+
+.heritage-stage::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(120,88,47,.045) 1px, transparent 1px) 49.5% 0 / 1px 100%,
+    radial-gradient(circle at 15% 48%, rgba(255,255,255,.72), transparent 38%),
+    linear-gradient(90deg, rgba(246,242,232,.24), rgba(255,255,255,.08));
+}
+
+.heritage-intro {
+  position: absolute;
+  top: 8vh;
+  left: 3.2vw;
+  z-index: 6;
+  width: 30vw;
+}
+
+.heritage-intro > p {
+  margin: 0 0 2.4vh;
+  color: rgba(139,96,38,.68);
+  font: 400 9px/1.2 "JetBrains Mono", monospace;
+  text-transform: uppercase;
+}
+
+.heritage-intro h2,
+.heritage-intro h3 { margin: 0; letter-spacing: 0; }
+.heritage-intro h2 { font: 400 clamp(38px, 4.4vw, 72px)/1 "Songti SC", STSong, serif; }
+.heritage-intro h3 { margin-top: .18em; font: 400 clamp(20px, 2.1vw, 34px)/1.25 "Songti SC", STSong, serif; }
+.heritage-intro > i { display: block; width: 34px; height: 1px; margin: 2.1vh 0; background: #b58336; }
+.heritage-intro > div { display: grid; gap: 8px; color: rgba(61,50,38,.69); font: 400 clamp(11px, .88vw, 14px)/1.45 "Songti SC", STSong, serif; }
+
+.heritage-product {
+  position: absolute;
+  top: 5.5vh;
+  right: -1.4vw;
+  z-index: 4;
+  width: 63vw;
+  margin: 0;
+  transform-origin: right center;
+}
+
+.heritage-product::before {
+  position: absolute;
+  inset: -10px;
+  z-index: -1;
+  content: "";
+  border: 1px solid rgba(91,72,48,.12);
+  background: rgba(255,253,248,.46);
+  box-shadow: 0 26px 72px rgba(68,49,25,.14);
+}
+
+.heritage-product img { width: 100%; height: auto; border: 1px solid rgba(78,65,49,.12); }
+.heritage-product figcaption {
+  display: flex;
+  margin-top: 13px;
+  color: rgba(66,52,37,.5);
+  justify-content: space-between;
+  font: 400 9px/1 "JetBrains Mono", monospace;
+  text-transform: uppercase;
+}
+.heritage-product figcaption b { color: rgba(67,53,36,.72); font-weight: 400; }
+
+.heritage-stream {
+  position: absolute;
+  inset: 0 auto 0 4.2vw;
+  z-index: 8;
+  width: min(34vw, 510px);
+  pointer-events: auto;
+  perspective: 1200px;
+}
+
+.heritage-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(20vw, 300px);
+  overflow: hidden;
+  border: 1px solid rgba(87,68,44,.14);
+  background: rgba(250,247,239,.97);
+  box-shadow: 0 15px 36px rgba(75,53,27,.11);
+  transform-origin: center center;
+  cursor: pointer;
+  outline: none;
+  will-change: transform, opacity;
+  transition: box-shadow .35s ease, border-color .35s ease;
+}
+
+.heritage-card:hover,
+.heritage-card:focus-visible,
+.heritage-card.is-active {
+  border-color: rgba(156,111,49,.3);
+  box-shadow: 0 26px 54px rgba(75,53,27,.19);
+}
+
+.heritage-card::before {
+  position: absolute;
+  inset: 6px;
+  z-index: 2;
+  content: "";
+  border: 1px solid rgba(128,92,45,.08);
+  pointer-events: none;
+}
+
+.heritage-card > img,
+.heritage-pearl-media { width: 100%; height: min(24vh, 220px); }
+.heritage-card > img,
+.heritage-pearl-media img { width: 100%; height: 100%; object-fit: cover; }
+.heritage-pearl-media { overflow: hidden; }
+.heritage-card > div:not(.heritage-pearl-media) { display: grid; padding: 18px 19px 16px; }
+.heritage-card small { color: #718174; font: 600 9px/1.2 "JetBrains Mono", monospace; }
+.heritage-card strong { margin-top: 10px; color: #302a22; font: 600 clamp(14px, 1.15vw, 18px)/1.35 "JetBrains Mono", monospace; }
+.heritage-card span { margin-top: 7px; color: rgba(66,56,44,.56); font: 400 10px/1.2 "JetBrains Mono", monospace; }
+.heritage-card em { width: max-content; max-width: 100%; margin-top: 12px; padding: 5px 7px; color: rgba(86,67,43,.7); background: #f0eade; font: normal 400 10px/1.25 "Songti SC", STSong, serif; }
+.heritage-card footer { margin: 0 19px; padding: 12px 0 15px; border-top: 1px solid rgba(74,60,43,.1); color: rgba(76,63,47,.48); font: 400 9px/1 "JetBrains Mono", monospace; }
+
+.heritage-steps {
+  position: absolute;
+  left: 32.4vw;
+  bottom: 8vh;
+  z-index: 5;
+  display: flex;
+  width: 22vw;
+  min-width: 260px;
+}
+.heritage-steps > span { display: grid; flex: 1; color: rgba(124,83,31,.68); gap: 7px; font: 400 9px/1 "JetBrains Mono", monospace; }
+.heritage-steps b { font-weight: 400; }
+.heritage-steps i { display: block; height: 1px; background: rgba(153,106,46,.28); }
+.heritage-steps em { color: rgba(67,54,39,.56); font: normal 400 11px/1.2 "Songti SC", STSong, serif; }
+
+.heritage-pearl-shared {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 17;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  visibility: hidden;
+  transform-origin: left top;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+.heritage-pearl-shared img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 76% 44%;
+  transform-origin: left center;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.heritage-loop {
+  position: absolute;
+  inset: 0;
+  z-index: 14;
+  overflow: hidden;
+  visibility: hidden;
+  background: #dfc8a7;
+}
+.heritage-loop-scene { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.01); }
+.heritage-loop-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(240,229,212,.52), rgba(240,229,212,.08) 57%, transparent 78%),
+    linear-gradient(0deg, rgba(77,54,31,.08), transparent 30%);
+}
+.heritage-loop-bird { position: absolute; top: 48px; left: 5.6vw; z-index: 3; width: 62px; height: 62px; }
+.heritage-loop-bird img { width: 100%; height: 100%; object-fit: contain; }
+.heritage-loop-logo { position: absolute; top: 48px; left: calc(5.6vw + 64px); z-index: 3; width: 208px; height: 80px; }
+.heritage-loop-logo img { width: 100%; height: 100%; object-fit: contain; object-position: left center; }
+.heritage-loop-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  width: min(1240px, 88vw);
+  min-height: 100dvh;
+  padding: 5vh 0 14vh 7.5vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.heritage-loop-copy p { margin: 0; white-space: nowrap; color: #2c241b; text-shadow: 0 2px 28px rgba(255,248,235,.32); font: 300 112px/1.02 "Songti SC", STSong, serif; letter-spacing: 0; }
+.heritage-loop-copy p:nth-child(2) { margin-left: .78em; }
+.heritage-loop-copy i { margin-left: .02em; color: #2b231a; font: italic 400 1.1em/.8 Didot, "Times New Roman", serif; text-shadow: 0 0 9px rgba(204,164,91,.32), 0 0 26px rgba(179,134,61,.18); }
+.heritage-loop-copy small { margin: 30px 0 0 5px; color: rgba(44,36,27,.68); font: 400 16px/1.45 "Outfit", "Microsoft YaHei UI", sans-serif; }
+.heritage-return {
+  position: absolute;
+  left: 38vw;
+  bottom: 4.5vh;
+  z-index: 5;
+  transform: translateX(-50%);
+}
+.heritage-loop-index { position: absolute; right: 4.2vw; bottom: 4vh; z-index: 3; color: rgba(44,36,27,.62); font: 400 11px/1 "JetBrains Mono", monospace; }
+
+.heritage-index {
+  position: absolute;
+  right: 2.4vw;
+  top: 50%;
+  z-index: 9;
+  display: grid;
+  margin: 0;
+  color: rgba(138,93,38,.66);
+  gap: 10px;
+  justify-items: center;
+  font: 400 9px/1 "JetBrains Mono", monospace;
+  transform: translateY(-50%);
+}
+.heritage-index i { width: 1px; height: 120px; background: rgba(112,79,39,.2); }
+.heritage-index b { font-weight: 400; }
+
 @media (max-width: 860px) {
   .shared-brand {
     top: 28px;
@@ -2010,6 +2255,33 @@ html:not(.is-growth-handoff) .growth-shared-name {
   .idea-bubble p { font-size: 11px; line-height: 1.55; }
   .idea-bubble-featured p { font-size: 12px; }
   .inspiration-index { display: none; }
+
+  .heritage-sequence { min-height: 700dvh; }
+  .heritage-intro { top: 5vh; left: 6vw; width: 88vw; }
+  .heritage-intro > p { margin-bottom: 1.3vh; }
+  .heritage-intro h2 { font-size: 42px; }
+  .heritage-intro h3 { font-size: 20px; }
+  .heritage-intro > i { margin: 1.5vh 0; }
+  .heritage-intro > div { gap: 4px; font-size: 11px; }
+  .heritage-product { top: 28vh; right: -22vw; width: 108vw; }
+  .heritage-product figcaption { padding-right: 24vw; }
+  .heritage-stream { left: 6vw; width: 88vw; }
+  .heritage-card { width: 62vw; max-width: 260px; }
+  .heritage-card > img,
+  .heritage-pearl-media { height: 20vh; }
+  .heritage-card > div:not(.heritage-pearl-media) { padding: 14px 15px 12px; }
+  .heritage-card strong { font-size: 13px; }
+  .heritage-card footer { margin: 0 15px; padding: 10px 0 12px; }
+  .heritage-steps { left: auto; right: 5vw; bottom: 4vh; width: 50vw; min-width: 0; }
+  .heritage-steps em { font-size: 9px; }
+  .heritage-index { display: none; }
+  .heritage-loop-bird { top: 28px; left: 24px; width: 48px; height: 48px; }
+  .heritage-loop-logo { top: 28px; left: 70px; width: 154px; height: 58px; }
+  .heritage-loop-copy { width: 92vw; padding: 5vh 0 16vh 7vw; }
+  .heritage-loop-copy p { font-size: clamp(38px, 11.5vw, 58px); }
+  .heritage-loop-copy p:nth-child(2) { margin-left: .18em; }
+  .heritage-loop-copy small { margin-top: 18px; font-size: 12px; }
+  .heritage-return { left: 50%; bottom: 4vh; transform: translateX(-50%) scale(.86); transform-origin: center bottom; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2037,4 +2309,14 @@ html:not(.is-growth-handoff) .growth-shared-name {
   .inspiration-stage { position: relative; }
   .inspiration-keyword { opacity: .08; }
   .idea-bubble { opacity: 1; }
+  .heritage-sequence { min-height: 100dvh; }
+  .heritage-stage { position: relative; }
+  .heritage-paper,
+  .heritage-intro,
+  .heritage-product,
+  .heritage-stream,
+  .heritage-steps,
+  .heritage-pearl-shared,
+  .heritage-index { display: none; }
+  .heritage-loop { visibility: visible; }
 }
