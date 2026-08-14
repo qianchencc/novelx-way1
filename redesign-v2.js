@@ -1756,10 +1756,10 @@
         const productWidth = productImage.offsetWidth;
         const productHeight = productImage.offsetHeight;
         return {
-          x: product.offsetLeft + productImage.offsetLeft + productWidth * .192,
-          y: product.offsetTop + productImage.offsetTop + productHeight * .578,
-          width: productWidth * .143,
-          height: productHeight * .137,
+          x: product.offsetLeft + productImage.offsetLeft + productWidth * .193,
+          y: product.offsetTop + productImage.offsetTop + productHeight * .5785,
+          width: productWidth * .1415,
+          height: productHeight * .136,
         };
       };
       const getCardPose = (cardIndex) => {
@@ -1897,7 +1897,8 @@
         .addLabel("cards", .18)
         .addLabel("pearl", 2.08)
         .addLabel("handoff", 2.48)
-        .addLabel("opening", 3.42)
+        .addLabel("travel", 2.82)
+        .addLabel("opening", 3.68)
         .to(product, { autoAlpha: 1, xPercent: 0, scale: 1, duration: .3, ease: "power3.out" }, "product")
         .to(intro, { autoAlpha: 1, x: 0, duration: .24, ease: "power3.out" }, "product+=.12")
         .to(steps, { autoAlpha: 1, y: 0, duration: .2, ease: "power2.out" }, "product+=.2")
@@ -1918,12 +1919,14 @@
       });
 
       timeline
-        .to(sharedPearl, { autoAlpha: 1, duration: .12, ease: "power1.out" }, "handoff")
-        .to(cards, { autoAlpha: 0, duration: .34, stagger: .018, ease: "power1.inOut" }, "handoff+=.16")
-        .to([product, intro, steps, index], { autoAlpha: 0, duration: .42, stagger: .012, ease: "power1.inOut" }, "handoff+=.18")
-        .to(paper, { autoAlpha: 0, duration: .58, ease: "power1.inOut" }, "handoff+=.2")
-        .to(sharedBrand, { autoAlpha: 0, duration: .24, ease: "power1.inOut" }, "handoff+=.2")
-        .to(loop, { autoAlpha: 1, duration: .76, ease: "power1.inOut" }, "handoff+=.24")
+        .to(sharedPearl, { autoAlpha: 1, duration: .1, ease: "power1.out" }, "handoff")
+        .to(sharedPearl, { autoAlpha: .62, duration: .28, ease: "power1.out" }, "handoff+=.1")
+        .to(product, { autoAlpha: 0, duration: .26, ease: "power2.out" }, "handoff+=.06")
+        .to(cards, { autoAlpha: 0, duration: .3, stagger: .014, ease: "power1.inOut" }, "handoff+=.08")
+        .to([intro, steps, index], { autoAlpha: 0, duration: .34, stagger: .012, ease: "power1.inOut" }, "handoff+=.08")
+        .to(paper, { autoAlpha: 0, duration: .48, ease: "power1.inOut" }, "travel+=.38")
+        .to(sharedBrand, { autoAlpha: 0, duration: .24, ease: "power1.inOut" }, "handoff+=.12")
+        .to(loop, { autoAlpha: 1, duration: .56, ease: "power2.inOut" }, "travel+=.38")
         .to(sharedPearl, {
           x: () => getPearlTarget().x,
           y: () => getPearlTarget().y,
@@ -1931,15 +1934,15 @@
           scaleY: () => getPearlTarget().height / getPearlStart().height,
           duration: .94,
           ease: "power3.inOut",
-        }, "handoff+=.14")
+        }, "travel")
         .to(sharedPearlImage, {
           keyframes: [
             { scale: 1.07, xPercent: 2.5, yPercent: -.5, duration: .46, ease: "power2.inOut" },
             { scale: 1.18, xPercent: 6.5, yPercent: 0, duration: .48, ease: "power3.inOut" },
           ],
-        }, "handoff+=.14")
-        .to(loopScene, { scale: 1.01, duration: .94, ease: "power2.inOut" }, "handoff+=.24")
-        .to(sharedPearl, { autoAlpha: 0, duration: .18, ease: "power3.out" }, "handoff+=.9")
+        }, "travel")
+        .to(loopScene, { scale: 1.01, duration: .62, ease: "power2.inOut" }, "travel+=.32")
+        .to(sharedPearl, { autoAlpha: 0, duration: .18, ease: "power3.out" }, "travel+=.76")
         .to(loopShade, { autoAlpha: 1, duration: .3 }, "opening+=.02")
         .to([loopBird, loopLogo], { autoAlpha: 1, y: 0, duration: .24, stagger: .035, ease: "power3.out" }, "opening+=.2")
         .fromTo(loopCopy, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: .34, ease: "power3.out", immediateRender: false }, "opening+=.27")
@@ -2034,6 +2037,73 @@
       .add(() => journeyLoop.play(0), 2.18);
   }
 
+  function initQuestionsAccordion() {
+    const section = document.querySelector(".questions-sequence");
+    const items = [...document.querySelectorAll(".question-item")];
+    const current = document.querySelector("#questions-current");
+    if (!section || !items.length || !current) return;
+
+    const setPosition = (item) => {
+      const itemIndex = items.indexOf(item);
+      if (itemIndex < 0) return;
+      current.textContent = String(itemIndex + 1).padStart(2, "0");
+      section.style.setProperty("--questions-progress", String((itemIndex + 1) / items.length));
+    };
+
+    const closeItem = (item) => {
+      const summary = item.querySelector("summary");
+      const answer = item.querySelector(".question-answer");
+      if (!summary || !answer || !item.open) return;
+      if (reduceMotion.matches) {
+        item.open = false;
+        item.style.height = "";
+        return;
+      }
+      gsap.killTweensOf([item, answer]);
+      gsap.to(answer, { autoAlpha: 0, y: -6, duration: .16, ease: "power1.out" });
+      gsap.to(item, {
+        height: summary.offsetHeight,
+        duration: .34,
+        ease: "power2.inOut",
+        onComplete: () => {
+          item.open = false;
+          item.style.height = "";
+          gsap.set(answer, { clearProps: "opacity,visibility,transform" });
+        },
+      });
+    };
+
+    const openItem = (item) => {
+      const summary = item.querySelector("summary");
+      const answer = item.querySelector(".question-answer");
+      if (!summary || !answer || item.open) return;
+      items.forEach((other) => { if (other !== item) closeItem(other); });
+      item.open = true;
+      setPosition(item);
+      if (reduceMotion.matches) return;
+      const targetHeight = item.scrollHeight;
+      gsap.killTweensOf([item, answer]);
+      gsap.set(answer, { autoAlpha: 0, y: 8 });
+      gsap.fromTo(item, { height: summary.offsetHeight }, {
+        height: targetHeight,
+        duration: .46,
+        ease: "power3.inOut",
+        onComplete: () => { item.style.height = "auto"; },
+      });
+      gsap.to(answer, { autoAlpha: 1, y: 0, duration: .32, delay: .12, ease: "power2.out" });
+    };
+
+    items.forEach((item) => {
+      item.querySelector("summary")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        if (item.open) closeItem(item);
+        else openItem(item);
+      });
+    });
+
+    setPosition(items.find((item) => item.open) || items[0]);
+  }
+
   buildFlightBird();
   initOpeningMotion();
   initOcAnimation();
@@ -2045,6 +2115,7 @@
   initOcShowcase();
   initInspirationLibrary();
   initHeritageLoop();
+  initQuestionsAccordion();
   window.addEventListener("load", () => {
     orbit?.render();
     ScrollTrigger.refresh();
