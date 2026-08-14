@@ -28,6 +28,7 @@ jobs:
         run: |
           mkdir _site
           cp redesign-v2.html _site/index.html
+          cp redesign-v2.html _site/redesign-v2.html
           cp index.html _site/legacy.html
           cp *.css *.js _site/
           cp -R assets fonts vendor _site/
