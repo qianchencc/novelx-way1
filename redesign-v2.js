@@ -2021,7 +2021,7 @@
       .to(journeyLine, { autoAlpha: 0.18, scaleY: 0, transformOrigin: "center bottom", duration: 0.46 }, 1.1);
 
     if (reduceMotion.matches) {
-      gsap.set([journeyCue, ".opening .title-line", ".opening-note", ".opening-index", ".orbit-decor > *"], { autoAlpha: 1, y: 0, scale: 1 });
+      gsap.set([journeyCue, ".opening-github", ".opening .title-line", ".opening-note", ".opening-index", ".orbit-decor > *"], { autoAlpha: 1, y: 0, scale: 1 });
       gsap.set(orbitReveal, { strokeDashoffset: 0 });
       return;
     }
@@ -2031,6 +2031,7 @@
       .to(".hero-oc", { textShadow: "0 0 9px rgba(204, 164, 91, 0.32), 0 0 26px rgba(179, 134, 61, 0.18)", duration: 0.7 }, 0.44)
       .to(orbitReveal, { strokeDashoffset: 0, duration: 1.9, ease: "power2.inOut" }, 0.5)
       .to(".orbit-decor > *", { autoAlpha: 0.72, scale: 1, duration: 0.7, stagger: 0.13, ease: "power2.out" }, 1.2)
+      .from(".opening-github", { autoAlpha: 0, y: -8, duration: .58 }, .34)
       .from(".opening-note", { autoAlpha: 0, y: 14, duration: 0.62 }, 0.62)
       .from(".opening-index", { autoAlpha: 0, duration: 0.6 }, 0.76)
       .to(journeyCue, { autoAlpha: 1, y: 0, duration: 0.68, ease: "power2.out" }, 2.02)

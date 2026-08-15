@@ -159,6 +159,45 @@ button:focus-visible,
   left: 5.6vw;
 }
 
+.opening-github {
+  position: absolute;
+  top: 61px;
+  right: 4.5vw;
+  z-index: 7;
+  display: inline-flex;
+  padding: 8px 0 9px;
+  align-items: center;
+  color: rgba(44, 36, 27, .58);
+  gap: 8px;
+  font: 500 10px/1 "JetBrains Mono", monospace;
+  letter-spacing: .04em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color .28s ease;
+}
+
+.opening-github::after {
+  position: absolute;
+  right: 0;
+  bottom: 3px;
+  left: 0;
+  height: 1px;
+  background: rgba(173, 130, 56, .74);
+  content: "";
+  transform: scaleX(.22);
+  transform-origin: right center;
+  transition: transform .38s var(--ease-out);
+}
+
+.opening-github i { color: rgba(173, 130, 56, .62); font-style: normal; }
+.opening-github b { color: rgba(133, 91, 37, .76); font-size: 13px; font-weight: 400; }
+.opening-github:hover,
+.opening-github:focus-visible { color: rgba(75, 51, 24, .92); outline: none; }
+.opening-github:hover::after,
+.opening-github:focus-visible::after { transform: scaleX(1); transform-origin: left center; }
+.opening-github:focus-visible { box-shadow: 0 0 0 1px rgba(173, 130, 56, .46); }
+.opening-github:active { transform: translateY(1px); }
+
 .library-sequence {
   position: relative;
   min-height: 520dvh;
@@ -2240,6 +2279,15 @@ html:not(.is-growth-handoff) .growth-shared-name {
   .opening-brand {
     top: 28px;
     left: 24px;
+  }
+
+  .opening-github {
+    top: 94px;
+    right: auto;
+    left: 24px;
+    max-width: calc(100vw - 48px);
+    font-size: 9px;
+    gap: 6px;
   }
 
   .library-sequence {
